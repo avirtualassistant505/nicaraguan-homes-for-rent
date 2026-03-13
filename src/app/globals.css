@@ -1,26 +1,51 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-ink: #14281d;
+  --color-mint: #d3ffe2;
+  --color-gold: #ffd66b;
+  --color-sand: #fffaf0;
+  --color-sky: #8ed3ff;
+  --background: linear-gradient(160deg, #e8fff4 0%, #fff7d8 45%, #d8f1ff 100%);
+  --foreground: var(--color-ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-body);
+  --font-title: var(--font-title);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), "Trebuchet MS", sans-serif;
+}
+
+.title-font {
+  font-family: var(--font-title), Georgia, serif;
+}
+
+.frosted {
+  backdrop-filter: blur(4px);
+}
+
+.fade-up {
+  animation: fade-up 700ms ease-out both;
+}
+
+.fade-up-delay {
+  animation: fade-up 900ms ease-out both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
