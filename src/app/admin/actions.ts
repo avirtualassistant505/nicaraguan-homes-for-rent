@@ -214,13 +214,14 @@ export async function createListingAction(formData: FormData) {
 
   const media = await prepareListingMedia(formData);
 
-  await insertSupabase<AdminListing[]>(
+  const createdListings = await insertSupabase<AdminListing[]>(
     "listings",
     buildListingPayload(formData, media.finalImagePath, media.finalGalleryImages),
   );
 
   refreshListingViews();
-  redirect("/admin");
+  const createdListing = createdListings[0];
+  redirect(createdListing ? `/admin?listing=${encodeURIComponent(createdListing.id)}` : "/admin");
 }
 
 export async function updateListingAction(formData: FormData) {
@@ -247,7 +248,7 @@ export async function updateListingAction(formData: FormData) {
   }
 
   refreshListingViews();
-  redirect("/admin");
+  redirect(`/admin?listing=${encodeURIComponent(id)}`);
 }
 
 export async function deleteListingAction(formData: FormData) {
