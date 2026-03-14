@@ -159,7 +159,8 @@ function matchesFilters(listing: AdminListing, filters: ListingFilters) {
   const keyword = (filters.q || "").trim().toLowerCase();
   const location = (filters.location || "").trim().toLowerCase();
   const propertyType = (filters.propertyType || "").trim().toLowerCase();
-  const maxPrice = Number(filters.maxPrice || "");
+  const maxPriceValue = (filters.maxPrice || "").trim();
+  const maxPrice = maxPriceValue ? Number(maxPriceValue) : null;
   const requirePets = filters.pets === "true";
 
   if (keyword) {
@@ -196,7 +197,7 @@ function matchesFilters(listing: AdminListing, filters: ListingFilters) {
     return false;
   }
 
-  if (Number.isFinite(maxPrice) && listing.monthly_price_usd != null && listing.monthly_price_usd > maxPrice) {
+  if (maxPrice != null && Number.isFinite(maxPrice) && listing.monthly_price_usd != null && listing.monthly_price_usd > maxPrice) {
     return false;
   }
 
