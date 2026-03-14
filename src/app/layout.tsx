@@ -22,7 +22,7 @@ const bodyFont = Nunito_Sans({
 export const metadata: Metadata = {
   title: "Nicaraguan Homes For Rent",
   description:
-    "A Vercel-ready rental landing page for showcasing homes across Nicaragua.",
+    "Premium Nicaragua rental marketplace homepage for beachfront villas, city homes, mountain retreats, and long-term stays.",
 };
 
 export default function RootLayout({

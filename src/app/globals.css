@@ -4,7 +4,9 @@
   --ink: #133c5b;
   --paper: #fffaf2;
   --background:
-    linear-gradient(180deg, #f4f4f1 0%, #faf9f4 100%);
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.92), transparent 28%),
+    radial-gradient(circle at top right, rgba(156, 223, 255, 0.36), transparent 26%),
+    linear-gradient(180deg, #eff8ff 0%, #fef6e5 52%, #eef7ff 100%);
   --foreground: var(--ink);
 }
 
@@ -44,84 +46,31 @@ a {
   font-family: var(--font-display), Georgia, serif;
 }
 
-.site-shell {
+.homepage-shell {
   position: relative;
-  isolation: isolate;
 }
 
-.reference-page {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)),
-    radial-gradient(circle at top center, rgba(173, 215, 244, 0.3), transparent 38%);
-}
-
-.logo-badge::after {
+.homepage-shell::before {
   content: "";
   position: absolute;
-  inset: auto 0 -10px 0;
-  height: 22px;
-  border-radius: 999px;
-  background: radial-gradient(circle, rgba(4, 25, 45, 0.26) 0%, rgba(4, 25, 45, 0) 72%);
-  filter: blur(5px);
-  z-index: -1;
-}
-
-.paper-panel {
+  inset: 0 0 auto 0;
+  height: 42rem;
+  pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(255, 251, 244, 0.98) 0%, rgba(250, 245, 236, 0.98) 100%),
-    radial-gradient(circle at 10% 18%, rgba(161, 130, 84, 0.05), transparent 24%),
-    radial-gradient(circle at 88% 84%, rgba(161, 130, 84, 0.05), transparent 24%);
+    radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.58), transparent 24%),
+    radial-gradient(circle at 82% 10%, rgba(115, 211, 255, 0.26), transparent 18%);
 }
 
-.mock-select {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 4px 12px rgba(10, 37, 55, 0.14);
+.brand-font {
+  letter-spacing: -0.02em;
 }
 
-.testimonial-paper {
-  background:
-    linear-gradient(180deg, rgba(255, 250, 237, 0.98) 0%, rgba(248, 240, 216, 0.98) 100%),
-    radial-gradient(circle at 10% 20%, rgba(156, 131, 81, 0.07), transparent 26%);
-}
-
-.wood-bar {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0)),
-    linear-gradient(90deg, #80512b 0%, #98683f 20%, #7d4f28 40%, #9d6f45 64%, #7b4d29 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 -2px 0 rgba(71, 37, 13, 0.22);
-}
-
-.footer-blue {
-  background:
-    linear-gradient(180deg, rgba(12, 92, 142, 0.84) 0%, rgba(8, 55, 89, 0.98) 100%),
-    radial-gradient(circle at 14% 18%, rgba(255, 255, 255, 0.06), transparent 16%);
-}
-
-.fade-rise {
-  animation: fade-rise 720ms ease-out both;
-}
-
-.fade-rise-delay {
-  animation: fade-rise 920ms ease-out both;
-}
-
-@keyframes fade-rise {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.display-font {
+  letter-spacing: -0.02em;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  .fade-rise,
-  .fade-rise-delay {
-    animation: none;
   }
 }
