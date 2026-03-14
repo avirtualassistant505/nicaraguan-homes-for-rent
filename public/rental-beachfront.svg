@@ -1,0 +1,38 @@
+<svg width="900" height="675" viewBox="0 0 900 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky" x1="450" y1="0" x2="450" y2="350" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2D97EF"/>
+      <stop offset="0.5" stop-color="#7FD7FF"/>
+      <stop offset="1" stop-color="#E3F7FF"/>
+    </linearGradient>
+    <linearGradient id="water" x1="450" y1="340" x2="450" y2="675" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#25A3DC"/>
+      <stop offset="1" stop-color="#0A4E7A"/>
+    </linearGradient>
+    <linearGradient id="roof" x1="320" y1="228" x2="575" y2="350" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB44C"/>
+      <stop offset="1" stop-color="#D05D19"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="675" fill="url(#sky)"/>
+  <ellipse cx="190" cy="95" rx="92" ry="34" fill="#F4FCFF"/>
+  <ellipse cx="685" cy="118" rx="112" ry="42" fill="#F5FDFF"/>
+  <path d="M0 350C103 307 220 296 339 327C490 365 583 373 742 336C804 321 857 318 900 323V675H0V350Z" fill="#4C8B59"/>
+  <path d="M0 378C156 363 299 365 445 385C607 407 741 408 900 379V675H0V378Z" fill="url(#water)"/>
+  <path d="M0 470C155 443 302 448 456 475C611 502 760 505 900 478V675H0V470Z" fill="#0C6EAA" opacity="0.85"/>
+  <path d="M500 522C590 480 685 470 900 514V675H356C417 614 454 553 500 522Z" fill="#E5BC7B"/>
+  <path d="M250 328L367 210H560L661 320L571 366H266L250 328Z" fill="url(#roof)"/>
+  <rect x="285" y="360" width="261" height="118" rx="8" fill="#F1E3BE"/>
+  <rect x="326" y="389" width="57" height="76" rx="4" fill="#7E503A"/>
+  <rect x="407" y="385" width="72" height="51" rx="4" fill="#CFF1FF"/>
+  <rect x="286" y="420" width="261" height="14" fill="#AC7852"/>
+  <path d="M284 478H548L519 528H246L284 478Z" fill="#CC9A64"/>
+  <g>
+    <rect x="124" y="257" width="13" height="135" rx="6.5" fill="#6A4426"/>
+    <path d="M131 171C177 183 215 219 230 279C182 273 139 255 131 171Z" fill="#55AA55"/>
+    <path d="M128 174C87 192 57 220 46 275C95 269 128 248 128 174Z" fill="#68C666"/>
+    <path d="M130 182C168 138 214 112 271 108C250 163 206 187 130 182Z" fill="#7BD66E"/>
+    <path d="M129 190C168 221 190 258 194 322C149 306 130 263 129 190Z" fill="#3E8D44"/>
+  </g>
+  <path d="M0 458C157 430 301 433 453 458C607 484 764 486 900 463" stroke="#D4FAFF" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+</svg>

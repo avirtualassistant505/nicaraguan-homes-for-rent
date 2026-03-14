@@ -1,20 +1,28 @@
 import type { Metadata } from "next";
-import { Lora, Manrope } from "next/font/google";
+import { Berkshire_Swash, Bree_Serif, Nunito_Sans } from "next/font/google";
 import "./globals.css";
 
-const titleFont = Lora({
-  variable: "--font-title",
+const brandFont = Berkshire_Swash({
+  variable: "--font-brand",
   subsets: ["latin"],
+  weight: "400",
 });
 
-const bodyFont = Manrope({
+const displayFont = Bree_Serif({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const bodyFont = Nunito_Sans({
   variable: "--font-body",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: "Nicaraguan Homes For Rent",
-  description: "Modern rentals in Managua, Granada, Leon, and San Juan del Sur",
+  description:
+    "A Vercel-ready rental landing page for showcasing homes across Nicaragua.",
 };
 
 export default function RootLayout({
@@ -24,7 +32,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${titleFont.variable} ${bodyFont.variable} antialiased`}>{children}</body>
+      <body
+        className={`${brandFont.variable} ${displayFont.variable} ${bodyFont.variable} antialiased`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

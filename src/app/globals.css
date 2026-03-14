@@ -1,45 +1,117 @@
 @import "tailwindcss";
 
 :root {
-  --color-ink: #14281d;
-  --color-mint: #d3ffe2;
-  --color-gold: #ffd66b;
-  --color-sand: #fffaf0;
-  --color-sky: #8ed3ff;
-  --background: linear-gradient(160deg, #e8fff4 0%, #fff7d8 45%, #d8f1ff 100%);
-  --foreground: var(--color-ink);
+  --ink: #123653;
+  --navy: #08385a;
+  --ocean: #0e5f90;
+  --sky: #58ace4;
+  --gold: #f3a52f;
+  --sunset: #ea780e;
+  --paper: #fffaf1;
+  --sand: #f5ead6;
+  --wood: #8b5e34;
+  --background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.86), transparent 34%),
+    radial-gradient(circle at top right, rgba(137, 221, 255, 0.4), transparent 28%),
+    linear-gradient(180deg, #d6f2ff 0%, #fef4dc 55%, #dbeffe 100%);
+  --foreground: var(--ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-body);
-  --font-title: var(--font-title);
+  --font-display: var(--font-display);
+  --font-brand: var(--font-brand);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body), "Trebuchet MS", sans-serif;
+  min-height: 100vh;
 }
 
-.title-font {
-  font-family: var(--font-title), Georgia, serif;
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-.frosted {
-  backdrop-filter: blur(4px);
+.brand-font {
+  font-family: var(--font-brand), "Brush Script MT", cursive;
 }
 
-.fade-up {
-  animation: fade-up 700ms ease-out both;
+.display-font {
+  font-family: var(--font-display), Georgia, serif;
 }
 
-.fade-up-delay {
-  animation: fade-up 900ms ease-out both;
+.site-shell {
+  position: relative;
+  isolation: isolate;
 }
 
-@keyframes fade-up {
+.site-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.72), transparent 20%),
+    radial-gradient(circle at 82% 10%, rgba(82, 175, 225, 0.24), transparent 18%);
+}
+
+.paper-surface {
+  background:
+    linear-gradient(180deg, rgba(255, 251, 244, 0.98) 0%, rgba(249, 242, 230, 0.95) 100%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(139, 94, 52, 0.04) 0,
+      rgba(139, 94, 52, 0.04) 2px,
+      transparent 2px,
+      transparent 10px
+    );
+}
+
+.wood-strip {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0)),
+    linear-gradient(90deg, #7c5029 0%, #9a693d 24%, #7f5129 49%, #9b6c41 75%, #7b4f2a 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -2px 0 rgba(56, 27, 7, 0.18);
+}
+
+.weathered-card {
+  position: relative;
+}
+
+.weathered-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.18), transparent 22%),
+    radial-gradient(circle at 88% 84%, rgba(17, 80, 119, 0.06), transparent 22%);
+  mix-blend-mode: soft-light;
+}
+
+.fade-rise {
+  animation: fade-rise 720ms ease-out both;
+}
+
+.fade-rise-delay {
+  animation: fade-rise 920ms ease-out both;
+}
+
+@keyframes fade-rise {
   from {
     opacity: 0;
     transform: translateY(14px);
@@ -47,5 +119,16 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .fade-rise,
+  .fade-rise-delay {
+    animation: none;
   }
 }
