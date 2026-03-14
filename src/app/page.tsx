@@ -7,38 +7,9 @@ import { SearchBar } from "@/components/home/SearchBar";
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { TestimonialCard } from "@/components/home/TestimonialCard";
 import { WhatsAppButton } from "@/components/home/WhatsAppButton";
+import { getFeaturedListings } from "@/lib/listings";
 
 const navItems = ["Home", "Listings", "About Us", "Contact"];
-
-const featuredRentals = [
-  {
-    title: "Beachfront Villa",
-    image: "/rental-beachfront.svg",
-    location: "San Juan del Sur",
-    label: "Beachfront",
-    price: "From $1,200/mo",
-    details:
-      "Ocean views, breezy terraces, and easy access to surf, dining, and walkable beach living.",
-  },
-  {
-    title: "Colonial House",
-    image: "/rental-colonial.svg",
-    location: "Granada",
-    label: "Historic Charm",
-    price: "From $1,450/mo",
-    details:
-      "Courtyard living with warm architecture, furnished interiors, and a central location near cafes and plazas.",
-  },
-  {
-    title: "Mountain Retreat",
-    image: "/rental-mountain.svg",
-    location: "Matagalpa Highlands",
-    label: "Cool Climate",
-    price: "From $980/mo",
-    details:
-      "Quiet, scenic stays surrounded by greenery, fresh air, and dramatic volcano and mountain views.",
-  },
-];
 
 const reasons = [
   {
@@ -131,7 +102,11 @@ const testimonials = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const { listings: featuredRentals, source: featuredListingsSource } =
+    await getFeaturedListings();
+  const heroListing = featuredRentals[0];
+
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-white/60 bg-[rgba(255,250,244,0.82)] backdrop-blur-xl">
@@ -208,8 +183,8 @@ export default function Home() {
                   <div className="w-full max-w-md rounded-[2rem] border border-white/25 bg-[rgba(255,250,243,0.14)] p-5 text-white backdrop-blur-xl shadow-[0_22px_48px_rgba(4,28,52,0.18)]">
                     <div className="relative aspect-[5/4] overflow-hidden rounded-[1.5rem]">
                       <Image
-                        src="/rental-beachfront.svg"
-                        alt="Featured Nicaragua rental"
+                        src={heroListing.image}
+                        alt={heroListing.title}
                         fill
                         sizes="(max-width: 1024px) 100vw, 420px"
                         className="object-cover"
@@ -218,15 +193,14 @@ export default function Home() {
                     <div className="mt-5 space-y-3">
                       <div className="flex items-center justify-between gap-3">
                         <p className="display-font text-[1.9rem] leading-none">
-                          Beachfront Villa
+                          {heroListing.title}
                         </p>
                         <span className="rounded-full bg-white/20 px-3 py-1 text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-[#ffe3b1]">
-                          Featured
+                          {heroListing.label}
                         </span>
                       </div>
                       <p className="text-[0.94rem] leading-7 text-[#e7f5ff]">
-                        Resort-style living with tropical landscaping, ocean
-                        breezes, and strong long-stay appeal.
+                        {heroListing.details}
                       </p>
                     </div>
                   </div>
@@ -245,7 +219,11 @@ export default function Home() {
             <SectionHeading
               eyebrow="Featured Rentals"
               title="Curated homes for beach living, city comfort, and slower tropical stays"
-              description="A polished first collection designed to feel premium, trustworthy, and easy to extend into a full listings platform."
+              description={
+                featuredListingsSource === "database"
+                  ? "Live featured listings are now loading from Supabase so this collection can be managed without touching the homepage code."
+                  : "A polished first collection designed to feel premium, trustworthy, and ready for a live Supabase listings feed."
+              }
             />
 
             <div className="grid gap-6 lg:grid-cols-3">
@@ -394,7 +372,7 @@ export default function Home() {
 
               <div className="flex flex-wrap gap-4 lg:justify-end">
                 <a
-                  href="#featured-rentals"
+                  href="#listings"
                   className="inline-flex rounded-full bg-[linear-gradient(180deg,#ff9f2d_0%,#eb7109_100%)] px-6 py-4 text-[0.95rem] font-extrabold uppercase tracking-[0.12em] text-white shadow-[0_16px_30px_rgba(176,92,0,0.28)] transition hover:-translate-y-0.5"
                 >
                   Browse Listings
