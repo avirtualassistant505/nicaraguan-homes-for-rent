@@ -184,7 +184,7 @@ function matchesFilters(listing: AdminListing, filters: ListingFilters) {
 
   if (location) {
     const locationFields = [listing.city, listing.region, listing.neighborhood]
-      .filter(Boolean)
+      .filter((value): value is string => Boolean(value))
       .map((value) => value.toLowerCase());
 
     if (!locationFields.some((value) => value === location)) {
@@ -209,8 +209,12 @@ function matchesFilters(listing: AdminListing, filters: ListingFilters) {
 
 function getFilterOptions(listings: AdminListing[]): ListingFilterOptions {
   return {
-    locations: [...new Set(listings.map((listing) => listing.city).filter(Boolean))].sort(),
-    propertyTypes: [...new Set(listings.map((listing) => listing.property_type).filter(Boolean))].sort(),
+    locations: [
+      ...new Set(listings.map((listing) => listing.city).filter((value): value is string => Boolean(value))),
+    ].sort(),
+    propertyTypes: [
+      ...new Set(listings.map((listing) => listing.property_type).filter((value): value is string => Boolean(value))),
+    ].sort(),
   };
 }
 
