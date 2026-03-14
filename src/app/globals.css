@@ -1,19 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #123653;
-  --navy: #08385a;
-  --ocean: #0e5f90;
-  --sky: #58ace4;
-  --gold: #f3a52f;
-  --sunset: #ea780e;
-  --paper: #fffaf1;
-  --sand: #f5ead6;
-  --wood: #8b5e34;
+  --ink: #133c5b;
+  --paper: #fffaf2;
   --background:
-    radial-gradient(circle at top left, rgba(255, 255, 255, 0.86), transparent 34%),
-    radial-gradient(circle at top right, rgba(137, 221, 255, 0.4), transparent 28%),
-    linear-gradient(180deg, #d6f2ff 0%, #fef4dc 55%, #dbeffe 100%);
+    linear-gradient(180deg, #f4f4f1 0%, #faf9f4 100%);
   --foreground: var(--ink);
 }
 
@@ -58,49 +49,51 @@ a {
   isolation: isolate;
 }
 
-.site-shell::before {
+.reference-page {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)),
+    radial-gradient(circle at top center, rgba(173, 215, 244, 0.3), transparent 38%);
+}
+
+.logo-badge::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: auto 0 -10px 0;
+  height: 22px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(4, 25, 45, 0.26) 0%, rgba(4, 25, 45, 0) 72%);
+  filter: blur(5px);
   z-index: -1;
-  background:
-    radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.72), transparent 20%),
-    radial-gradient(circle at 82% 10%, rgba(82, 175, 225, 0.24), transparent 18%);
 }
 
-.paper-surface {
+.paper-panel {
   background:
-    linear-gradient(180deg, rgba(255, 251, 244, 0.98) 0%, rgba(249, 242, 230, 0.95) 100%),
-    repeating-linear-gradient(
-      90deg,
-      rgba(139, 94, 52, 0.04) 0,
-      rgba(139, 94, 52, 0.04) 2px,
-      transparent 2px,
-      transparent 10px
-    );
+    linear-gradient(180deg, rgba(255, 251, 244, 0.98) 0%, rgba(250, 245, 236, 0.98) 100%),
+    radial-gradient(circle at 10% 18%, rgba(161, 130, 84, 0.05), transparent 24%),
+    radial-gradient(circle at 88% 84%, rgba(161, 130, 84, 0.05), transparent 24%);
 }
 
-.wood-strip {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0)),
-    linear-gradient(90deg, #7c5029 0%, #9a693d 24%, #7f5129 49%, #9b6c41 75%, #7b4f2a 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -2px 0 rgba(56, 27, 7, 0.18);
+.mock-select {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 4px 12px rgba(10, 37, 55, 0.14);
 }
 
-.weathered-card {
-  position: relative;
+.testimonial-paper {
+  background:
+    linear-gradient(180deg, rgba(255, 250, 237, 0.98) 0%, rgba(248, 240, 216, 0.98) 100%),
+    radial-gradient(circle at 10% 20%, rgba(156, 131, 81, 0.07), transparent 26%);
 }
 
-.weathered-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
+.wood-bar {
   background:
-    radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.18), transparent 22%),
-    radial-gradient(circle at 88% 84%, rgba(17, 80, 119, 0.06), transparent 22%);
-  mix-blend-mode: soft-light;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0)),
+    linear-gradient(90deg, #80512b 0%, #98683f 20%, #7d4f28 40%, #9d6f45 64%, #7b4d29 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 -2px 0 rgba(71, 37, 13, 0.22);
+}
+
+.footer-blue {
+  background:
+    linear-gradient(180deg, rgba(12, 92, 142, 0.84) 0%, rgba(8, 55, 89, 0.98) 100%),
+    radial-gradient(circle at 14% 18%, rgba(255, 255, 255, 0.06), transparent 16%);
 }
 
 .fade-rise {
