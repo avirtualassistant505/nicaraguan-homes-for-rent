@@ -1,9 +1,19 @@
-const links = ["Home", "Listings", "About Us", "Contact"];
+import Link from "next/link";
+
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/listings", label: "Listings" },
+  { href: "/#about-us", label: "About Us" },
+  { href: "/#contact", label: "Contact" },
+];
 const socials = ["Facebook", "Instagram", "YouTube"];
 
 export function Footer() {
   return (
-    <footer className="mt-20 overflow-hidden rounded-t-[2rem] bg-[linear-gradient(180deg,#0d5b89_0%,#082f4f_100%)] text-white">
+    <footer
+      id="contact"
+      className="mt-20 overflow-hidden rounded-t-[2rem] bg-[linear-gradient(180deg,#0d5b89_0%,#082f4f_100%)] text-white"
+    >
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <div className="space-y-4">
           <p className="display-font text-[1.8rem] leading-none text-[#fff3d7]">
@@ -21,13 +31,13 @@ export function Footer() {
           </h3>
           <div className="mt-5 space-y-3">
             {links.map((link) => (
-              <a
-                key={link}
-                href={`#${link.toLowerCase().replace(/\s+/g, "-")}`}
+              <Link
+                key={link.href}
+                href={link.href}
                 className="block text-[0.98rem] text-[#e6f6ff] transition hover:text-[#ffd37f]"
               >
-                {link}
-              </a>
+                {link.label}
+              </Link>
             ))}
           </div>
         </div>
@@ -49,13 +59,13 @@ export function Footer() {
           </h3>
           <div className="mt-5 space-y-3">
             {socials.map((social) => (
-              <a
+              <Link
                 key={social}
-                href="#contact"
+                href="/#contact"
                 className="block text-[0.98rem] text-[#e6f6ff] transition hover:text-[#ffd37f]"
               >
                 {social}
-              </a>
+              </Link>
             ))}
           </div>
         </div>

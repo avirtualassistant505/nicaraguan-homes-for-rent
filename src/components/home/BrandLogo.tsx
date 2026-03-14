@@ -1,11 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export function BrandLogo() {
   return (
-    <a href="#home" className="group inline-flex items-center gap-3">
+    <Link href="/" className="group inline-flex items-center gap-3">
       <div className="relative h-14 w-14 overflow-hidden rounded-full ring-2 ring-white/70 shadow-[0_10px_20px_rgba(13,73,114,0.2)]">
         <Image
-          src="/hero-scene.svg"
+          src="/nhr-logo.svg"
           alt="Nicaraguan Homes For Rent"
           fill
           sizes="56px"
@@ -20,6 +21,6 @@ export function BrandLogo() {
           Homes For Rent
         </p>
       </div>
-    </a>
+    </Link>
   );
 }
