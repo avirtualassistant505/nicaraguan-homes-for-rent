@@ -113,6 +113,10 @@ export async function uploadBufferToStorage(
   body: Uint8Array,
   contentType: string,
 ) {
+  const payload = new Blob([body], {
+    type: contentType || "application/octet-stream",
+  });
+
   const response = await fetch(
     `${getSupabaseProjectUrl()}/storage/v1/object/${bucket}/${objectPath}`,
     {
@@ -122,7 +126,7 @@ export async function uploadBufferToStorage(
         "Content-Type": contentType || "application/octet-stream",
         "x-upsert": "true",
       },
-      body,
+      body: payload,
       cache: "no-store",
     },
   );
