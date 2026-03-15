@@ -124,7 +124,7 @@ export function TikTokPanel({
     }
   }
 
-  function handleReuseVideo(listingVideoId: string) {
+  async function handleReuseVideo(listingVideoId: string) {
     setFeedback("");
     setIsBusy(true);
     const formData = new FormData();
