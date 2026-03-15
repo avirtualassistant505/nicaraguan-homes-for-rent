@@ -110,7 +110,7 @@ export function getPublicStorageUrl(bucket: string, objectPath: string) {
 export async function uploadBufferToStorage(
   bucket: string,
   objectPath: string,
-  body: Buffer,
+  body: Uint8Array,
   contentType: string,
 ) {
   const response = await fetch(
@@ -142,7 +142,7 @@ export async function uploadToStorage(
   return uploadBufferToStorage(
     bucket,
     objectPath,
-    Buffer.from(await file.arrayBuffer()),
+    new Uint8Array(await file.arrayBuffer()),
     file.type || "application/octet-stream",
   );
 }
