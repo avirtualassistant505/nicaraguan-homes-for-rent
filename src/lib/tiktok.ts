@@ -640,6 +640,10 @@ export async function uploadVideoBufferToTikTok(
     }
 
     const end = start + chunkLength;
+    const chunkBody = buffer.buffer.slice(
+      buffer.byteOffset + start,
+      buffer.byteOffset + end,
+    ) as ArrayBuffer;
     const response = await fetch(uploadUrl, {
       method: "PUT",
       headers: {
@@ -647,7 +651,7 @@ export async function uploadVideoBufferToTikTok(
         "Content-Length": String(chunkLength),
         "Content-Range": `bytes ${start}-${end - 1}/${buffer.length}`,
       },
-      body: buffer.subarray(start, end),
+      body: chunkBody,
       cache: "no-store",
     });
 
