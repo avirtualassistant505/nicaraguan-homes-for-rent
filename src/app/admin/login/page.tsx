@@ -13,6 +13,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
 
   const params = searchParams ? await searchParams : {};
   const error = typeof params.error === "string" ? params.error : "";
+  const adminConfigured = isAdminConfigured();
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,#e9f6ff_0%,#f8f3e8_52%,#fffdf8_100%)] px-4 py-10 sm:px-6 lg:px-8">
@@ -25,11 +26,11 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
             Sign in to manage listings
           </h1>
           <p className="mt-4 text-[1rem] leading-7 text-[#577185]">
-            This admin is server-side and built to work well both in the browser and
-            through Codex-backed database edits.
+            Secure access for listing updates, media uploads, and connected publishing
+            tools.
           </p>
 
-          {!isAdminConfigured() ? (
+          {!adminConfigured ? (
             <div className="mt-8 rounded-[1.5rem] border border-[#ffd7b2] bg-[#fff6eb] p-5 text-sm leading-7 text-[#7f4a12]">
               Add these variables to <code>.env.local</code> before using the admin:
               <pre className="mt-3 overflow-x-auto rounded-xl bg-white/80 p-4 text-xs text-[#5e3a15]">
@@ -52,13 +53,14 @@ ADMIN_SESSION_SECRET=replace-with-a-random-secret`}
                 name="password"
                 type="password"
                 required
+                autoComplete="current-password"
                 className="h-14 rounded-2xl border border-[#cfe0ea] px-4 text-base text-[#173d58] outline-none transition focus:border-[#ef7c11] focus:ring-4 focus:ring-[#ef7c11]/15"
               />
             </label>
 
             <button
               type="submit"
-              disabled={!isAdminConfigured()}
+              disabled={!adminConfigured}
               className="inline-flex justify-center rounded-full bg-[linear-gradient(180deg,#ff9f2d_0%,#eb7109_100%)] px-6 py-4 text-sm font-extrabold uppercase tracking-[0.14em] text-white shadow-[0_14px_28px_rgba(176,92,0,0.24)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Enter admin

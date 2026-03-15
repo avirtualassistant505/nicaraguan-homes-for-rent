@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { AdminListingForm } from "@/components/admin/AdminListingForm";
@@ -44,6 +45,32 @@ function StatCard({ label, value }: { label: string; value: number }) {
   );
 }
 
+function buildAdminHref(
+  filters: { q: string; status: string },
+  extra: Record<string, string | undefined>,
+) {
+  const nextParams = new URLSearchParams();
+
+  if (filters.q) {
+    nextParams.set("q", filters.q);
+  }
+
+  if (filters.status && filters.status !== "all") {
+    nextParams.set("status", filters.status);
+  }
+
+  for (const [key, value] of Object.entries(extra)) {
+    if (value) {
+      nextParams.set(key, value);
+    } else {
+      nextParams.delete(key);
+    }
+  }
+
+  const query = nextParams.toString();
+  return query ? `/admin?${query}` : "/admin";
+}
+
 export default async function AdminDashboardPage({
   searchParams,
 }: AdminDashboardPageProps) {
@@ -52,6 +79,12 @@ export default async function AdminDashboardPage({
   const selectedListingId = typeof params.listing === "string" ? params.listing : "";
   const view = typeof params.view === "string" ? params.view : "";
   const tiktokStatus = typeof params.tiktok === "string" ? params.tiktok : "";
+  const searchQuery = typeof params.q === "string" ? params.q.trim() : "";
+  const statusFilter =
+    typeof params.status === "string" &&
+    ["all", "published", "draft", "featured"].includes(params.status)
+      ? params.status
+      : "all";
   const showCreatePanel = view === "new";
 
   if (!isAdminConfigured()) {
@@ -71,6 +104,42 @@ export default async function AdminDashboardPage({
 
   await requireAdminSession();
   const { listings, error } = await getAdminListings();
+  const normalizedSearch = searchQuery.toLowerCase();
+  const filteredListings = listings.filter((listing) => {
+    const matchesSearch =
+      !normalizedSearch ||
+      [
+        listing.title,
+        listing.city,
+        listing.region,
+        listing.neighborhood,
+        listing.property_type,
+        listing.label,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase()
+        .includes(normalizedSearch);
+
+    if (!matchesSearch) {
+      return false;
+    }
+
+    if (statusFilter === "published") {
+      return listing.is_published;
+    }
+
+    if (statusFilter === "draft") {
+      return !listing.is_published;
+    }
+
+    if (statusFilter === "featured") {
+      return listing.is_featured;
+    }
+
+    return true;
+  });
+  const activeFilters = { q: searchQuery, status: statusFilter };
   const selectedListing = showCreatePanel
     ? null
     : listings.find((listing) => listing.id === selectedListingId) || listings[0] || null;
@@ -97,7 +166,8 @@ export default async function AdminDashboardPage({
                 Manage properties from a real inventory dashboard
               </h1>
               <p className="mt-4 text-[1rem] leading-7 text-[#587286]">
-                Pick a property from the list, edit it in one focused pane, and manage images, video assets, and draft-based social publishing without scrolling through every form on the page.
+                Search the inventory, open one property at a time, and manage listing copy,
+                images, and video publishing from a cleaner workspace.
               </p>
             </div>
 
@@ -161,57 +231,118 @@ export default async function AdminDashboardPage({
                   </h2>
                 </div>
                 <Link
-                  href="/admin?view=new"
+                  href={buildAdminHref(activeFilters, { view: "new", listing: undefined })}
                   className="inline-flex rounded-full bg-[linear-gradient(180deg,#ff9f2d_0%,#eb7109_100%)] px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] text-white shadow-[0_12px_22px_rgba(176,92,0,0.24)] transition hover:-translate-y-0.5"
                 >
                   New listing
                 </Link>
               </div>
 
+              <form action="/admin" className="mt-5 space-y-3">
+                <input type="hidden" name="listing" value={selectedListingId} />
+                <label className="grid gap-2 text-sm font-semibold text-[#18435f]">
+                  Search properties
+                  <input
+                    name="q"
+                    defaultValue={searchQuery}
+                    placeholder="Title, city, neighborhood..."
+                    className="h-12 rounded-2xl border border-[#cfe0ea] px-4 text-sm text-[#173d58] outline-none transition focus:border-[#ef7c11] focus:ring-4 focus:ring-[#ef7c11]/15"
+                  />
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { value: "all", label: "All" },
+                    { value: "published", label: "Published" },
+                    { value: "draft", label: "Drafts" },
+                    { value: "featured", label: "Featured" },
+                  ].map((option) => (
+                    <label
+                      key={option.value}
+                      className={`flex cursor-pointer items-center justify-center rounded-2xl border px-3 py-2 text-xs font-extrabold uppercase tracking-[0.14em] ${
+                        statusFilter === option.value
+                          ? "border-[#0f699b] bg-[#eef8ff] text-[#0f699b]"
+                          : "border-[#dbe8ef] bg-[#fbfdff] text-[#587286]"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="status"
+                        value={option.value}
+                        defaultChecked={statusFilter === option.value}
+                        className="sr-only"
+                      />
+                      {option.label}
+                    </label>
+                  ))}
+                </div>
+                <button className="w-full rounded-full border border-[#c7d7e3] bg-white px-4 py-3 text-xs font-extrabold uppercase tracking-[0.14em] text-[#18435f] transition hover:bg-[#f6fbff]">
+                  Apply filters
+                </button>
+              </form>
+
               {listings.length === 0 ? (
                 <div className="mt-5 rounded-[1.25rem] border border-dashed border-[#bad2df] bg-[#f8fcff] px-4 py-5 text-sm leading-7 text-[#587286]">
                   No listings yet. Start by creating the first property record.
                 </div>
+              ) : filteredListings.length === 0 ? (
+                <div className="mt-5 rounded-[1.25rem] border border-dashed border-[#bad2df] bg-[#f8fcff] px-4 py-5 text-sm leading-7 text-[#587286]">
+                  No properties match the current filters. Clear the search or change the
+                  status view to see more listings.
+                </div>
               ) : (
                 <div className="mt-5 space-y-3">
-                  {listings.map((listing) => {
+                  {filteredListings.map((listing) => {
                     const isSelected = selectedListing?.id === listing.id && !showCreatePanel;
                     return (
                       <Link
                         key={listing.id}
-                        href={`/admin?listing=${encodeURIComponent(listing.id)}`}
+                        href={buildAdminHref(activeFilters, {
+                          listing: listing.id,
+                          view: undefined,
+                        })}
                         className={`block rounded-[1.35rem] border px-4 py-4 transition ${
                           isSelected
                             ? "border-[#0f699b] bg-[#eef8ff] shadow-[0_10px_22px_rgba(15,105,155,0.12)]"
                             : "border-[#dbe8ef] bg-[#fbfdff] hover:border-[#bed4e2] hover:bg-white"
                         }`}
                       >
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <p className="text-[1rem] font-extrabold leading-6 text-[#0c3553]">{listing.title}</p>
-                            <p className="mt-1 text-sm text-[#587286]">
-                              {[listing.city, listing.neighborhood, listing.region].filter(Boolean).join(", ")}
-                            </p>
+                        <div className="flex items-start gap-3">
+                          <Image
+                            src={listing.image_path}
+                            alt=""
+                            width={64}
+                            height={64}
+                            className="h-16 w-16 rounded-[1rem] border border-[#dbe8ef] object-cover bg-[#eef6fb]"
+                          />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-start justify-between gap-3">
+                              <div>
+                                <p className="text-[1rem] font-extrabold leading-6 text-[#0c3553]">{listing.title}</p>
+                                <p className="mt-1 text-sm text-[#587286]">
+                                  {[listing.city, listing.neighborhood, listing.region].filter(Boolean).join(", ")}
+                                </p>
+                              </div>
+                              <span className={`rounded-full px-3 py-1 text-[0.68rem] font-extrabold uppercase tracking-[0.16em] ${listing.is_published ? 'bg-[#e8f7ee] text-[#1e7b43]' : 'bg-[#fff1df] text-[#b46500]'}`}>
+                                {listing.is_published ? 'Published' : 'Draft'}
+                              </span>
+                            </div>
+
+                            <div className="mt-3 flex flex-wrap gap-2">
+                              <span className="rounded-full bg-[#f1f7fb] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[#45657b]">
+                                {listing.property_type}
+                              </span>
+                              {listing.is_featured ? (
+                                <span className="rounded-full bg-[#def3ff] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[#0e638f]">
+                                  Featured
+                                </span>
+                              ) : null}
+                            </div>
+
+                            <div className="mt-3 flex items-center justify-between gap-3 text-sm">
+                              <span className="font-bold text-[#174562]">{listing.price_label}</span>
+                              <span className="text-[#587286]">Open</span>
+                            </div>
                           </div>
-                          <span className={`rounded-full px-3 py-1 text-[0.68rem] font-extrabold uppercase tracking-[0.16em] ${listing.is_published ? 'bg-[#e8f7ee] text-[#1e7b43]' : 'bg-[#fff1df] text-[#b46500]'}`}>
-                            {listing.is_published ? 'Published' : 'Draft'}
-                          </span>
-                        </div>
-
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          <span className="rounded-full bg-[#f1f7fb] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[#45657b]">
-                            {listing.property_type}
-                          </span>
-                          {listing.is_featured ? (
-                            <span className="rounded-full bg-[#def3ff] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[#0e638f]">
-                              Featured
-                            </span>
-                          ) : null}
-                        </div>
-
-                        <div className="mt-3 flex items-center justify-between gap-3 text-sm">
-                          <span className="font-bold text-[#174562]">{listing.price_label}</span>
-                          <span className="text-[#587286]">Open</span>
                         </div>
                       </Link>
                     );
@@ -261,11 +392,11 @@ export default async function AdminDashboardPage({
                     </div>
 
                     <div className="flex flex-wrap gap-3">
-                      <Link
-                        href="/admin?view=new"
-                        className="inline-flex rounded-full border border-[#c7d7e3] bg-white px-5 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-[#18435f] transition hover:bg-[#f6fbff]"
-                      >
-                        Add another
+                    <Link
+                      href={buildAdminHref(activeFilters, { view: "new", listing: undefined })}
+                      className="inline-flex rounded-full border border-[#c7d7e3] bg-white px-5 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-[#18435f] transition hover:bg-[#f6fbff]"
+                    >
+                      Add another
                       </Link>
                       <Link
                         href={`/listings/${selectedListing.slug}`}
