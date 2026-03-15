@@ -4,8 +4,9 @@ import { BrandLogo } from "@/components/home/BrandLogo";
 const navItems = [
   { href: "/", label: "Home" },
   { href: "/listings", label: "Listings" },
-  { href: "/#about-us", label: "About Us" },
-  { href: "/#contact", label: "Contact" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+  { href: "/creator-tools", label: "Creator Tools" },
 ];
 
 type SiteHeaderProps = {
@@ -15,7 +16,7 @@ type SiteHeaderProps = {
 
 export function SiteHeader({
   ctaHref = "/listings",
-  ctaLabel = "Search",
+  ctaLabel = "Browse Listings",
 }: SiteHeaderProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-white/60 bg-[rgba(255,250,244,0.82)] backdrop-blur-xl">

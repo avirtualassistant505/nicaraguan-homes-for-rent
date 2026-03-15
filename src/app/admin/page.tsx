@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { AdminListingForm } from "@/components/admin/AdminListingForm";
+import { TikTokPanel } from "@/components/admin/TikTokPanel";
 import {
   createListingAction,
   deleteListingAction,
@@ -9,6 +10,13 @@ import {
 } from "@/app/admin/actions";
 import { isAdminConfigured, requireAdminSession } from "@/lib/admin-auth";
 import { getAdminListings } from "@/lib/listings";
+import {
+  getListingVideos,
+  getRecentUploadJobs,
+  getTikTokCallbackPath,
+  getTikTokConnectionSummary,
+  isTikTokConfigured,
+} from "@/lib/tiktok";
 
 type AdminDashboardPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -43,6 +51,7 @@ export default async function AdminDashboardPage({
   const errorCode = typeof params.error === "string" ? params.error : "";
   const selectedListingId = typeof params.listing === "string" ? params.listing : "";
   const view = typeof params.view === "string" ? params.view : "";
+  const tiktokStatus = typeof params.tiktok === "string" ? params.tiktok : "";
   const showCreatePanel = view === "new";
 
   if (!isAdminConfigured()) {
@@ -68,6 +77,12 @@ export default async function AdminDashboardPage({
   const publishedCount = listings.filter((listing) => listing.is_published).length;
   const draftCount = listings.filter((listing) => !listing.is_published).length;
   const featuredCount = listings.filter((listing) => listing.is_featured).length;
+  const tiktokConfigured = isTikTokConfigured();
+  const tiktokConnection = await getTikTokConnectionSummary();
+  const listingVideos = selectedListing ? await getListingVideos(selectedListing.id) : [];
+  const recentJobs = selectedListing
+    ? await getRecentUploadJobs(listingVideos.map((video) => video.id))
+    : [];
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,#e9f6ff_0%,#f8f3e8_48%,#fffdf8_100%)] px-4 py-8 sm:px-6 lg:px-8">
@@ -82,7 +97,7 @@ export default async function AdminDashboardPage({
                 Manage properties from a real inventory dashboard
               </h1>
               <p className="mt-4 text-[1rem] leading-7 text-[#587286]">
-                Pick a property from the list, edit it in one focused pane, and jump between draft and published homes without scrolling through every form on the page.
+                Pick a property from the list, edit it in one focused pane, and manage images, video assets, and draft-based social publishing without scrolling through every form on the page.
               </p>
             </div>
 
@@ -113,6 +128,18 @@ export default async function AdminDashboardPage({
           <Notice tone="error">
             A required field was missing or the last action could not be completed.
           </Notice>
+        ) : null}
+
+        {tiktokStatus === "connected" ? (
+          <Notice tone="info">TikTok is connected and ready for draft uploads.</Notice>
+        ) : null}
+
+        {tiktokStatus === "denied" ? (
+          <Notice tone="error">TikTok authorization was denied or canceled before the connection completed.</Notice>
+        ) : null}
+
+        {tiktokStatus === "error" ? (
+          <Notice tone="error">TikTok returned an error during the last authorization attempt. Review the connection settings and try again.</Notice>
         ) : null}
 
         {error ? (
@@ -163,7 +190,7 @@ export default async function AdminDashboardPage({
                           <div>
                             <p className="text-[1rem] font-extrabold leading-6 text-[#0c3553]">{listing.title}</p>
                             <p className="mt-1 text-sm text-[#587286]">
-                              {[listing.city, listing.neighborhood, listing.region].filter(Boolean).join(', ')}
+                              {[listing.city, listing.neighborhood, listing.region].filter(Boolean).join(", ")}
                             </p>
                           </div>
                           <span className={`rounded-full px-3 py-1 text-[0.68rem] font-extrabold uppercase tracking-[0.16em] ${listing.is_published ? 'bg-[#e8f7ee] text-[#1e7b43]' : 'bg-[#fff1df] text-[#b46500]'}`}>
@@ -254,6 +281,16 @@ export default async function AdminDashboardPage({
                   action={updateListingAction}
                   deleteAction={deleteListingAction}
                   listing={selectedListing}
+                />
+
+                <TikTokPanel
+                  listingId={selectedListing.id}
+                  listingTitle={selectedListing.title}
+                  configured={tiktokConfigured}
+                  connection={tiktokConnection}
+                  videos={listingVideos}
+                  jobs={recentJobs}
+                  callbackUrl={getTikTokCallbackPath()}
                 />
               </>
             )}

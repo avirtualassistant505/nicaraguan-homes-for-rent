@@ -29,7 +29,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
 
   return (
     <>
-      <SiteHeader ctaHref="/admin/login" ctaLabel="Admin" />
+      <SiteHeader ctaHref="/contact" ctaLabel="Start Inquiry" />
 
       <main className="homepage-shell min-h-screen overflow-x-hidden">
         <section className="relative px-4 pb-12 pt-6 sm:px-6 lg:px-8 lg:pb-16">
@@ -44,17 +44,16 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
                     Search beach, city, and mountain listings in one place
                   </h1>
                   <p className="mt-4 max-w-2xl text-[1rem] leading-8 text-[#e7f5ff]">
-                    Filter by location, property type, budget, and pet-friendliness.
-                    This page is powered by the same Supabase inventory the admin edits.
+                    Filter by location, property type, budget, and pet-friendliness to find published homes that fit your plans.
                   </p>
                 </div>
 
                 <div className="flex flex-wrap gap-3">
                   <Link
-                    href="/admin"
+                    href="/contact"
                     className="inline-flex rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-white backdrop-blur transition hover:bg-white/16"
                   >
-                    Admin
+                    Contact Us
                   </Link>
                   <Link
                     href="/"
@@ -83,10 +82,10 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
           <div className="mx-auto max-w-7xl space-y-8">
             <SectionHeading
               eyebrow="Available homes"
-              title="Live inventory built for renters and easy to manage behind the scenes"
+              title="Published rentals ready for your shortlist"
               description={
                 error
-                  ? "The listings feed is temporarily unavailable. The admin and public pages will refresh as soon as Supabase responds again."
+                  ? "The listings feed is temporarily unavailable. Please reload shortly or contact us directly for the latest availability."
                   : `${listings.length} listing${listings.length === 1 ? "" : "s"} matched your filters out of ${totalPublished} published homes.`
               }
             />

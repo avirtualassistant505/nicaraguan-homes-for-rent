@@ -8,6 +8,7 @@ import { SiteHeader } from "@/components/home/SiteHeader";
 import { TestimonialCard } from "@/components/home/TestimonialCard";
 import { WhatsAppButton } from "@/components/home/WhatsAppButton";
 import { getFeaturedListings } from "@/lib/listings";
+import { SITE_EMAIL } from "@/lib/site";
 
 const reasons = [
   {
@@ -101,13 +102,12 @@ const testimonials = [
 ];
 
 export default async function Home() {
-  const { listings: featuredRentals, source: featuredListingsSource } =
-    await getFeaturedListings();
+  const { listings: featuredRentals } = await getFeaturedListings();
   const heroListing = featuredRentals[0];
 
   return (
     <>
-      <SiteHeader ctaHref="/#search" ctaLabel="Search" />
+      <SiteHeader ctaHref="/listings" ctaLabel="Browse Listings" />
 
       <main id="home" className="homepage-shell overflow-x-hidden">
         <section className="relative px-4 pb-16 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pb-24">
@@ -133,52 +133,63 @@ export default async function Home() {
                     <h1 className="display-font max-w-3xl text-[3rem] leading-[0.95] sm:text-[4.2rem] lg:text-[5.25rem]">
                       Find Your Dream Rental Home in Nicaragua
                     </h1>
-                    <p className="max-w-xl text-[1.05rem] leading-8 text-[#e9f6ff] sm:text-[1.12rem]">
-                      Discover beachfront villas, mountain retreats, city homes,
-                      and long-term rentals across Nicaragua.
+                    <p className="max-w-2xl text-[1.02rem] leading-8 text-[#e7f5ff] sm:text-[1.08rem]">
+                      Discover curated homes for relocation, remote work, family stays, and tropical long-term living across Nicaragua's most loved destinations.
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap gap-3">
-                    {["Beachfront", "Long-term stays", "Furnished homes", "Relocation-ready"].map(
-                      (item) => (
-                        <span
-                          key={item}
-                          className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-[0.85rem] font-bold text-white/95 backdrop-blur"
-                        >
-                          {item}
-                        </span>
-                      ),
-                    )}
+                  <div className="flex flex-wrap gap-4">
+                    <a
+                      href="/listings"
+                      className="inline-flex rounded-full bg-[linear-gradient(180deg,#ff9f2d_0%,#eb7109_100%)] px-6 py-4 text-[0.95rem] font-extrabold uppercase tracking-[0.12em] text-white shadow-[0_16px_30px_rgba(176,92,0,0.28)] transition hover:-translate-y-0.5"
+                    >
+                      View Listings
+                    </a>
+                    <a
+                      href="/contact"
+                      className="inline-flex rounded-full border border-white/25 bg-white/10 px-6 py-4 text-[0.95rem] font-extrabold uppercase tracking-[0.12em] text-white backdrop-blur transition hover:bg-white/16"
+                    >
+                      Start Inquiry
+                    </a>
                   </div>
                 </div>
 
-                <div className="hidden justify-end lg:flex">
-                  <div className="w-full max-w-md rounded-[2rem] border border-white/25 bg-[rgba(255,250,243,0.14)] p-5 text-white backdrop-blur-xl shadow-[0_22px_48px_rgba(4,28,52,0.18)]">
-                    <div className="relative aspect-[5/4] overflow-hidden rounded-[1.5rem]">
-                      <Image
-                        src={heroListing.image}
-                        alt={heroListing.title}
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 420px"
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="mt-5 space-y-3">
-                      <div className="flex items-center justify-between gap-3">
-                        <p className="display-font text-[1.9rem] leading-none">
-                          {heroListing.title}
-                        </p>
-                        <span className="rounded-full bg-white/20 px-3 py-1 text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-[#ffe3b1]">
-                          {heroListing.label}
-                        </span>
+                {heroListing ? (
+                  <div className="relative z-10 justify-self-end lg:w-full lg:max-w-[28rem]">
+                    <div className="overflow-hidden rounded-[2rem] border border-white/20 bg-[rgba(7,47,73,0.76)] p-4 backdrop-blur-xl shadow-[0_22px_50px_rgba(4,24,41,0.36)]">
+                      <div className="relative aspect-[4/3] overflow-hidden rounded-[1.45rem] border border-white/10">
+                        <Image
+                          src={heroListing.image}
+                          alt={heroListing.title}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 30vw"
+                          className="object-cover"
+                        />
+                        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,30,48,0)_0%,rgba(5,30,48,0.78)_100%)]" />
                       </div>
-                      <p className="text-[0.94rem] leading-7 text-[#e7f5ff]">
-                        {heroListing.details}
-                      </p>
+                      <div className="space-y-4 px-2 pb-2 pt-5 text-white">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#ffe0a2]">
+                              Featured Stay
+                            </p>
+                            <p className="mt-2 display-font text-[1.8rem] leading-none text-white">
+                              {heroListing.title}
+                            </p>
+                          </div>
+                          <span className="rounded-full bg-white/20 px-3 py-1 text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-[#ffe3b1]">
+                            {heroListing.label}
+                          </span>
+                        </div>
+                        <p className="text-[0.94rem] font-bold text-[#d7eefb]">{heroListing.location}</p>
+                        <p className="text-[0.94rem] leading-7 text-[#e7f5ff]">{heroListing.details}</p>
+                        <p className="text-[0.95rem] font-extrabold uppercase tracking-[0.12em] text-[#ffe3b1]">
+                          {heroListing.price}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : null}
               </div>
 
               <div id="search" className="absolute inset-x-4 bottom-4 z-10 sm:inset-x-8 lg:inset-x-12 lg:bottom-8">
@@ -193,11 +204,7 @@ export default async function Home() {
             <SectionHeading
               eyebrow="Featured Rentals"
               title="Curated homes for beach living, city comfort, and slower tropical stays"
-              description={
-                featuredListingsSource === "database"
-                  ? "Live featured listings are now loading from Supabase so this collection can be managed without touching the homepage code."
-                  : "A polished first collection designed to feel premium, trustworthy, and ready for a live Supabase listings feed."
-              }
+              description="Explore a polished first collection of Nicaragua rentals chosen for location, comfort, and long-stay appeal."
             />
 
             <div className="grid gap-6 lg:grid-cols-3">
@@ -215,63 +222,57 @@ export default async function Home() {
                 <SectionHeading
                   eyebrow="Why Rent in Nicaragua?"
                   title="A lifestyle-driven market with beauty, flexibility, and real value"
-                  description="Built for renters who care about both quality of life and a smooth move, whether they’re staying for months or starting a new chapter."
+                  description="Built for renters who care about both quality of life and a smooth move, whether they are staying for months or starting a new chapter."
                 />
                 <div className="relative overflow-hidden rounded-[2rem] border border-white/65 bg-[#0f5d8d] shadow-[0_22px_52px_rgba(7,41,66,0.12)]">
-                  <Image
-                    src="/hero-scene.svg"
-                    alt="Scenic Nicaragua"
-                    width={1600}
-                    height={900}
-                    className="h-auto w-full"
-                  />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.16),transparent_40%)]" />
+                  <div className="relative px-6 py-8 text-white sm:px-8">
+                    <p className="text-[0.82rem] font-extrabold uppercase tracking-[0.18em] text-[#ffe8b9]">
+                      What renters love
+                    </p>
+                    <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                      {reasons.map((reason) => (
+                        <FeatureCard key={reason.title} {...reason} />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                {reasons.map((reason) => (
-                  <FeatureCard key={reason.title} {...reason} />
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+              <div className="space-y-8">
+                <SectionHeading
+                  eyebrow="Explore Key Locations"
+                  title="Choose the region that fits your pace, work, and lifestyle"
+                  description="From beach towns and colonial cities to mountain escapes, Nicaragua offers very different ways to live."
+                />
 
-        <section className="px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="space-y-8">
-              <SectionHeading
-                eyebrow="Featured Locations"
-                title="Explore standout places to rent across Nicaragua"
-                description="Each region offers a different pace, atmosphere, and rental profile for expats, families, digital nomads, and long-stay travelers."
-              />
-
-              <div className="grid gap-5 sm:grid-cols-2">
-                {locations.map((location) => (
-                  <article
-                    key={location.name}
-                    className="group overflow-hidden rounded-[1.6rem] border border-white/60 bg-white shadow-[0_18px_38px_rgba(8,56,90,0.08)]"
-                  >
-                    <div className="relative aspect-[1.2/0.9] overflow-hidden">
-                      <Image
-                        src={location.image}
-                        alt={location.name}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        className="object-cover transition duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,48,76,0)_0%,rgba(8,48,76,0.55)_100%)]" />
-                      <div className="absolute inset-x-4 bottom-4">
-                        <p className="display-font text-[1.6rem] leading-none text-white">
-                          {location.name}
-                        </p>
-                        <p className="mt-2 text-[0.92rem] text-[#e6f6ff]">
-                          {location.subtitle}
-                        </p>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {locations.map((location) => (
+                    <article
+                      key={location.name}
+                      className="group relative overflow-hidden rounded-[1.7rem] border border-white/60 bg-white shadow-[0_18px_42px_rgba(8,56,90,0.1)]"
+                    >
+                      <div className="relative aspect-[1.08/1] overflow-hidden">
+                        <Image
+                          src={location.image}
+                          alt={location.name}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover transition duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,48,76,0)_0%,rgba(8,48,76,0.55)_100%)]" />
+                        <div className="absolute inset-x-4 bottom-4">
+                          <p className="display-font text-[1.6rem] leading-none text-white">
+                            {location.name}
+                          </p>
+                          <p className="mt-2 text-[0.92rem] text-[#e6f6ff]">
+                            {location.subtitle}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </article>
-                ))}
+                    </article>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -279,7 +280,7 @@ export default async function Home() {
               <SectionHeading
                 eyebrow="Browse by Lifestyle"
                 title="Start with the way you want to live"
-                description="A future-friendly pattern for turning this homepage into a richer discovery experience."
+                description="Whether you want walkable beach access or a quieter remote-work base, these categories help narrow the best fit faster."
               />
 
               <div className="grid gap-4 sm:grid-cols-2">
@@ -302,8 +303,7 @@ export default async function Home() {
                       </span>
                     </div>
                     <p className="mt-4 text-[0.96rem] leading-7 text-[#4a6a82]">
-                      Browse homes tailored to this lifestyle, with design and
-                      location details that help renters narrow the right fit quickly.
+                      Browse homes tailored to this lifestyle, with design and location details that help renters narrow the right fit quickly.
                     </p>
                   </article>
                 ))}
@@ -316,8 +316,8 @@ export default async function Home() {
           <div className="mx-auto max-w-7xl space-y-10">
             <SectionHeading
               eyebrow="Client Testimonials"
-              title="Built to inspire trust and make the next step easy"
-              description="Use social proof to show that the platform is polished, responsive, and grounded in real renter needs."
+              title="Trusted by renters planning their next chapter"
+              description="People use the site to compare neighborhoods, shortlist homes, and move from browsing to a confident inquiry."
             />
 
             <div className="grid gap-5 lg:grid-cols-3">
@@ -333,29 +333,28 @@ export default async function Home() {
             <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
               <div className="space-y-5">
                 <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[0.76rem] font-extrabold uppercase tracking-[0.2em] text-[#ffe7ba]">
-                  Ready to Inquire?
+                  Ready to inquire?
                 </span>
                 <h2 className="display-font text-[2.4rem] leading-[0.96] sm:text-[3.2rem]">
-                  Looking for the perfect rental in Nicaragua?
+                  Looking for the right rental in Nicaragua?
                 </h2>
                 <p className="max-w-2xl text-[1rem] leading-8 text-[#dcedf8]">
-                  Browse listings, compare locations, and start a conversation
-                  about the kind of home and lifestyle you want next.
+                  Browse listings, compare locations, and send us the details that matter most to your move, timeline, and budget.
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-4 lg:justify-end">
                 <a
-                  href="#listings"
+                  href="/listings"
                   className="inline-flex rounded-full bg-[linear-gradient(180deg,#ff9f2d_0%,#eb7109_100%)] px-6 py-4 text-[0.95rem] font-extrabold uppercase tracking-[0.12em] text-white shadow-[0_16px_30px_rgba(176,92,0,0.28)] transition hover:-translate-y-0.5"
                 >
                   Browse Listings
                 </a>
                 <a
-                  href="#contact"
+                  href={`mailto:${SITE_EMAIL}`}
                   className="inline-flex rounded-full border border-white/25 bg-white/10 px-6 py-4 text-[0.95rem] font-extrabold uppercase tracking-[0.12em] text-white backdrop-blur transition hover:bg-white/16"
                 >
-                  Contact Us
+                  Email Us
                 </a>
               </div>
             </div>

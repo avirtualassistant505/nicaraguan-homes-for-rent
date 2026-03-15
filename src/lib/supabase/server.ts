@@ -107,10 +107,11 @@ export function getPublicStorageUrl(bucket: string, objectPath: string) {
   return `${getSupabaseProjectUrl()}/storage/v1/object/public/${bucket}/${objectPath}`;
 }
 
-export async function uploadToStorage(
+export async function uploadBufferToStorage(
   bucket: string,
   objectPath: string,
-  file: File,
+  body: Buffer,
+  contentType: string,
 ) {
   const response = await fetch(
     `${getSupabaseProjectUrl()}/storage/v1/object/${bucket}/${objectPath}`,
@@ -118,10 +119,10 @@ export async function uploadToStorage(
       method: "POST",
       headers: {
         ...getSupabaseHeaders(),
-        "Content-Type": file.type || "application/octet-stream",
+        "Content-Type": contentType || "application/octet-stream",
         "x-upsert": "true",
       },
-      body: Buffer.from(await file.arrayBuffer()),
+      body,
       cache: "no-store",
     },
   );
@@ -131,6 +132,40 @@ export async function uploadToStorage(
   }
 
   return getPublicStorageUrl(bucket, objectPath);
+}
+
+export async function uploadToStorage(
+  bucket: string,
+  objectPath: string,
+  file: File,
+) {
+  return uploadBufferToStorage(
+    bucket,
+    objectPath,
+    Buffer.from(await file.arrayBuffer()),
+    file.type || "application/octet-stream",
+  );
+}
+
+export async function downloadFromStorage(bucket: string, objectPath: string) {
+  const response = await fetch(
+    `${getSupabaseProjectUrl()}/storage/v1/object/${bucket}/${objectPath}`,
+    {
+      headers: {
+        ...getSupabaseHeaders(),
+      },
+      cache: "no-store",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Supabase download failed with ${response.status}: ${await response.text()}`);
+  }
+
+  return {
+    buffer: Buffer.from(await response.arrayBuffer()),
+    contentType: response.headers.get("content-type") || "application/octet-stream",
+  };
 }
 
 export async function deleteFromStorage(bucket: string, objectPaths: string[]) {

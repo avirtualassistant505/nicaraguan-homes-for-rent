@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "@/components/home/Footer";
 import { SiteHeader } from "@/components/home/SiteHeader";
 import { getPublishedListingBySlug } from "@/lib/listings";
+import { isUsablePhone, isUsableWhatsAppUrl } from "@/lib/site";
 
 type ListingPageProps = {
   params: Promise<{
@@ -29,12 +30,13 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
   const location = [listing.city, listing.neighborhood, listing.region].filter(Boolean).join(", ");
   const gallery = listing.gallery_images.length > 0 ? listing.gallery_images : [listing.image_path];
-  const contactHref = listing.contact_email ? `mailto:${listing.contact_email}` : null;
-  const whatsappHref = listing.whatsapp_url || null;
+  const contactHref = listing.contact_email ? `mailto:${listing.contact_email}` : "/contact";
+  const hasPhone = isUsablePhone(listing.contact_phone);
+  const whatsappHref = isUsableWhatsAppUrl(listing.whatsapp_url) ? listing.whatsapp_url : null;
 
   return (
     <>
-      <SiteHeader ctaHref="/admin/login" ctaLabel="Admin" />
+      <SiteHeader ctaHref="/contact" ctaLabel="Contact Us" />
 
       <main className="min-h-screen bg-[radial-gradient(circle_at_top,#e8f5ff_0%,#fffaf1_52%,#fffdf8_100%)] px-4 py-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl space-y-8">
@@ -46,10 +48,10 @@ export default async function ListingPage({ params }: ListingPageProps) {
               Back to listings
             </Link>
             <Link
-              href="/admin/login"
+              href="/contact"
               className="inline-flex rounded-full bg-[#0d5f90] px-5 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-[#0a4f78]"
             >
-              Admin
+              Contact us
             </Link>
           </div>
 
@@ -166,7 +168,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   </div>
                   <div className="flex items-center justify-between gap-4 border-b border-[#dce9f0] pb-3">
                     <dt className="font-semibold text-[#587286]">Size</dt>
-                    <dd className="font-bold">{formatNumber(listing.square_meters, " m²")}</dd>
+                    <dd className="font-bold">{formatNumber(listing.square_meters, " m^2")}</dd>
                   </div>
                   <div className="flex items-center justify-between gap-4">
                     <dt className="font-semibold text-[#587286]">Bathrooms</dt>
@@ -181,7 +183,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   {listing.contact_name ? (
                     <p className="text-sm font-bold text-[#173d58]">{listing.contact_name}</p>
                   ) : null}
-                  {listing.contact_phone ? (
+                  {hasPhone ? (
                     <p className="text-sm text-[#587286]">{listing.contact_phone}</p>
                   ) : null}
                   {listing.contact_email ? (
@@ -189,14 +191,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   ) : null}
 
                   <div className="flex flex-wrap gap-3 pt-2">
-                    {contactHref ? (
-                      <a
-                        href={contactHref}
-                        className="inline-flex rounded-full bg-[linear-gradient(180deg,#ff9f2d_0%,#eb7109_100%)] px-5 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-white"
-                      >
-                        Email inquiry
-                      </a>
-                    ) : null}
+                    <a
+                      href={contactHref}
+                      className="inline-flex rounded-full bg-[linear-gradient(180deg,#ff9f2d_0%,#eb7109_100%)] px-5 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-white"
+                    >
+                      Email inquiry
+                    </a>
                     {whatsappHref ? (
                       <a
                         href={whatsappHref}
