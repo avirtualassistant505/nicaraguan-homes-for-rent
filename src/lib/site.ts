@@ -1,5 +1,8 @@
 export const SITE_NAME = "Nicaraguan Homes For Rent";
-export const SITE_EMAIL = "info@nicaraguanhomesforrent.com";
+export const SITE_EMAIL = "nicahomesforrent@gmail.com";
+export const SITE_PHONE = "2049052234";
+export const SITE_PHONE_DISPLAY = "(204) 905-2234";
+export const SITE_WHATSAPP_URL = "https://wa.me/12049052234";
 export const SITE_TAGLINE =
   "Curated long-stay homes across Nicaragua for relocation, remote work, and tropical living.";
 

@@ -9,7 +9,8 @@
     "lint": "eslint",
     "db:verify": "node scripts/run-psql.mjs -c \"select current_database() as database_name, current_user as database_user, now() as connected_at;\"",
     "db:migrate:initial": "node scripts/run-psql.mjs -v ON_ERROR_STOP=1 -f supabase/migrations/20260314143000_initial_listings.sql",
-    "db:migrate:expand": "node scripts/run-psql.mjs -v ON_ERROR_STOP=1 -f supabase/migrations/20260314173500_expand_listing_fields.sql"
+    "db:migrate:expand": "node scripts/run-psql.mjs -v ON_ERROR_STOP=1 -f supabase/migrations/20260314173500_expand_listing_fields.sql",
+    "db:migrate:contacts": "node scripts/run-psql.mjs -v ON_ERROR_STOP=1 -f supabase/migrations/20260314235500_update_listing_contact_defaults.sql"
   },
   "dependencies": {
     "next": "16.1.6",
