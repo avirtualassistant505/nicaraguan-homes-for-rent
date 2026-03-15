@@ -72,6 +72,7 @@ export async function POST(request: Request) {
 
   try {
     let buffer: Buffer;
+    let uploadBody: ArrayBuffer | null = null;
     let mimeType: string;
     let listingVideoRecord =
       typeof listingVideoId === "string" && listingVideoId
@@ -85,6 +86,7 @@ export async function POST(request: Request) {
     if (listingVideoRecord) {
       const stored = await downloadFromStorage(LISTING_VIDEO_BUCKET, listingVideoRecord.storage_path);
       buffer = stored.buffer;
+      uploadBody = Uint8Array.from(stored.buffer).buffer as ArrayBuffer;
       mimeType = listingVideoRecord.mime_type || stored.contentType;
     } else if (file instanceof File) {
       mimeType = file.type || "video/mp4";
@@ -96,7 +98,8 @@ export async function POST(request: Request) {
         );
       }
 
-      buffer = Buffer.from(await file.arrayBuffer());
+      uploadBody = await file.arrayBuffer();
+      buffer = Buffer.from(uploadBody);
 
       if (buffer.length === 0) {
         return NextResponse.json({ error: "The selected video file is empty." }, { status: 400 });
@@ -109,11 +112,15 @@ export async function POST(request: Request) {
         );
       }
 
+      if (!uploadBody) {
+        return NextResponse.json({ error: "Unable to prepare the selected video." }, { status: 500 });
+      }
+
       const storagePath = buildStoragePath(listing.slug, file.name);
       const publicUrl = await uploadBufferToStorage(
         LISTING_VIDEO_BUCKET,
         storagePath,
-        buffer,
+        uploadBody,
         mimeType,
       );
 
