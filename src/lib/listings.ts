@@ -57,6 +57,20 @@ export type AdminListing = {
   updated_at: string;
 };
 
+export type ListingVideo = {
+  id: string;
+  listing_id: string;
+  file_name: string;
+  video_url: string;
+  storage_path: string;
+  mime_type: string;
+  size_bytes: number;
+  duration_seconds: number | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+};
+
 export type ListingFilters = {
   q?: string;
   location?: string;
@@ -312,5 +326,16 @@ export async function getPublishedListingBySlug(slug: string) {
   } catch (error) {
     console.error(`Failed to load published listing "${slug}" from Supabase.`, error);
     return null;
+  }
+}
+
+export async function getListingVideosForListing(listingId: string) {
+  try {
+    return await querySupabase<ListingVideo[]>(
+      `listing_videos?select=id,listing_id,file_name,video_url,storage_path,mime_type,size_bytes,duration_seconds,status,created_at,updated_at&listing_id=eq.${encodeURIComponent(listingId)}&order=created_at.asc`,
+    );
+  } catch (error) {
+    console.error(`Failed to load listing videos for "${listingId}".`, error);
+    return [] as ListingVideo[];
   }
 }

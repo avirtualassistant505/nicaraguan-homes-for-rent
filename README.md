@@ -44,6 +44,16 @@ Admin dashboard:
 /admin
 ```
 
+## Automation listing publish
+
+The Daily Nicaragua media automation can publish a completed listing bundle into the website after YouTube upload:
+
+```bash
+npm run automation:publish-listing -- --listing-output C:\path\to\listing-output
+```
+
+The command uploads selected regenerated photos from `source\visual-manifest.json` into the public `listing-media` bucket, upserts the matching `listings` row, and attaches the long-form/Shorts YouTube URLs as external `listing_videos` records. It requires `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in the process environment or `.env.local`; it does not print secret values.
+
 ## Useful commands
 
 ```bash

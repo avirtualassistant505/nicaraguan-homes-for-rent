@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/home/Footer";
 import { SiteHeader } from "@/components/home/SiteHeader";
-import { getPublishedListingBySlug } from "@/lib/listings";
+import { getListingVideosForListing, getPublishedListingBySlug } from "@/lib/listings";
 import { isUsablePhone, isUsableWhatsAppUrl } from "@/lib/site";
 
 type ListingPageProps = {
@@ -20,6 +20,24 @@ function formatNumber(value: number | null, suffix: string) {
   return `${value}${suffix}`;
 }
 
+function getYouTubeEmbedUrl(url: string) {
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, "");
+    const videoId =
+      host === "youtu.be"
+        ? parsed.pathname.split("/").filter(Boolean)[0]
+        : parsed.searchParams.get("v") ||
+          (parsed.pathname.startsWith("/shorts/")
+            ? parsed.pathname.split("/").filter(Boolean)[1]
+            : null);
+
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function ListingPage({ params }: ListingPageProps) {
   const { slug } = await params;
   const listing = await getPublishedListingBySlug(slug);
@@ -33,6 +51,13 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const contactHref = listing.contact_email ? `mailto:${listing.contact_email}` : "/contact";
   const hasPhone = isUsablePhone(listing.contact_phone);
   const whatsappHref = isUsableWhatsAppUrl(listing.whatsapp_url) ? listing.whatsapp_url : null;
+  const videos = await getListingVideosForListing(listing.id);
+  const embeddableVideos = videos
+    .map((video) => ({
+      ...video,
+      embedUrl: getYouTubeEmbedUrl(video.video_url),
+    }))
+    .filter((video) => video.embedUrl);
 
   return (
     <>
@@ -130,6 +155,43 @@ export default async function ListingPage({ params }: ListingPageProps) {
                             sizes="(max-width: 768px) 100vw, 50vw"
                             className="object-cover"
                           />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {embeddableVideos.length > 0 ? (
+                  <div>
+                    <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-[#0f699b]">
+                      Video tour
+                    </p>
+                    <div className="mt-4 space-y-4">
+                      {embeddableVideos.map((video) => (
+                        <div
+                          key={video.id}
+                          className="overflow-hidden rounded-[1.25rem] border border-[#d8e5ee] bg-[#f8fcff]"
+                        >
+                          <div className="aspect-video">
+                            <iframe
+                              src={video.embedUrl || ""}
+                              title={video.file_name}
+                              className="h-full w-full"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              allowFullScreen
+                            />
+                          </div>
+                          <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+                            <p className="text-sm font-bold text-[#173d58]">{video.file_name}</p>
+                            <a
+                              href={video.video_url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-sm font-extrabold uppercase tracking-[0.12em] text-[#0f699b]"
+                            >
+                              Open on YouTube
+                            </a>
+                          </div>
                         </div>
                       ))}
                     </div>

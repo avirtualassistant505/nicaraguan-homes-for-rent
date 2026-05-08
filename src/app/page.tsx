@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { FeatureCard } from "@/components/home/FeatureCard";
 import { Footer } from "@/components/home/Footer";
 import { ListingCard } from "@/components/home/ListingCard";
@@ -134,17 +135,17 @@ export default async function Home() {
                       Find Your Dream Rental Home in Nicaragua
                     </h1>
                     <p className="max-w-2xl text-[1.02rem] leading-8 text-[#e7f5ff] sm:text-[1.08rem]">
-                      Discover curated homes for relocation, remote work, family stays, and tropical long-term living across Nicaragua's most loved destinations.
+                      Discover curated homes for relocation, remote work, family stays, and tropical long-term living across Nicaragua&apos;s most loved destinations.
                     </p>
                   </div>
 
                   <div className="flex flex-wrap gap-4">
-                    <a
+                    <Link
                       href="/listings"
                       className="inline-flex rounded-full bg-[linear-gradient(180deg,#ff9f2d_0%,#eb7109_100%)] px-6 py-4 text-[0.95rem] font-extrabold uppercase tracking-[0.12em] text-white shadow-[0_16px_30px_rgba(176,92,0,0.28)] transition hover:-translate-y-0.5"
                     >
                       View Listings
-                    </a>
+                    </Link>
                     <a
                       href="/contact"
                       className="inline-flex rounded-full border border-white/25 bg-white/10 px-6 py-4 text-[0.95rem] font-extrabold uppercase tracking-[0.12em] text-white backdrop-blur transition hover:bg-white/16"
@@ -344,12 +345,12 @@ export default async function Home() {
               </div>
 
               <div className="flex flex-wrap gap-4 lg:justify-end">
-                <a
+                <Link
                   href="/listings"
                   className="inline-flex rounded-full bg-[linear-gradient(180deg,#ff9f2d_0%,#eb7109_100%)] px-6 py-4 text-[0.95rem] font-extrabold uppercase tracking-[0.12em] text-white shadow-[0_16px_30px_rgba(176,92,0,0.28)] transition hover:-translate-y-0.5"
                 >
                   Browse Listings
-                </a>
+                </Link>
                 <a
                   href={`mailto:${SITE_EMAIL}`}
                   className="inline-flex rounded-full border border-white/25 bg-white/10 px-6 py-4 text-[0.95rem] font-extrabold uppercase tracking-[0.12em] text-white backdrop-blur transition hover:bg-white/16"
