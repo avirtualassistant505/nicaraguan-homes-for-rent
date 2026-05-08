@@ -22,7 +22,11 @@ export function ListingCard({
 }: ListingCardProps) {
   return (
     <article className="group overflow-hidden rounded-[1.6rem] border border-white/60 bg-white shadow-[0_20px_42px_rgba(7,41,66,0.12)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_28px_54px_rgba(7,41,66,0.18)]">
-      <div className="relative aspect-[1.14/1] overflow-hidden">
+      <Link
+        href={`/listings/${slug}`}
+        className="relative block aspect-[1.14/1] overflow-hidden"
+        aria-label={`View details for ${title}`}
+      >
         <Image
           src={image}
           alt={title}
@@ -38,7 +42,7 @@ export function ListingCard({
             {price}
           </span>
         </div>
-      </div>
+      </Link>
 
       <div className="space-y-4 p-5">
         <div className="space-y-1">
