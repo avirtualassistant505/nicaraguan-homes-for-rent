@@ -56,7 +56,7 @@ export function ListingCard({
         <p className="text-[0.98rem] leading-7 text-[#4b6b83]">{details}</p>
         <Link
           href={`/listings/${slug}`}
-          className="inline-flex rounded-full bg-[#0d5f90] px-5 py-3 text-[0.92rem] font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-[#0a4f78]"
+          className="inline-flex rounded-full bg-[#0d5f90] px-5 py-3 text-[0.92rem] font-extrabold uppercase tracking-[0.12em] !text-white transition hover:bg-[#0a4f78]"
         >
           View Details
         </Link>
