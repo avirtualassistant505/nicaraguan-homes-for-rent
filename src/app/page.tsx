@@ -6,7 +6,6 @@ import { ListingCard } from "@/components/home/ListingCard";
 import { SearchBar } from "@/components/home/SearchBar";
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { SiteHeader } from "@/components/home/SiteHeader";
-import { WhatsAppButton } from "@/components/home/WhatsAppButton";
 import { getFeaturedListings } from "@/lib/listings";
 import {
   JsonLd,
@@ -377,7 +376,6 @@ export default async function Home() {
         <Footer />
       </main>
 
-      <WhatsAppButton />
       <JsonLd data={[organizationJsonLd(), websiteJsonLd(), itemListJsonLd(featuredItemsForJsonLd(featuredRentals))]} />
     </>
   );

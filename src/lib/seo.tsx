@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import type { AdminListing, FeaturedListing } from "@/lib/listings";
-import { SITE_EMAIL, SITE_NAME, SITE_PHONE_DISPLAY, SITE_WHATSAPP_URL } from "@/lib/site";
+import { SITE_EMAIL, SITE_NAME } from "@/lib/site";
 
 export const SITE_URL = "https://www.nicaraguahomesforrent.net";
 export const SITE_TITLE = "Nicaragua Homes For Rent";
@@ -469,12 +469,11 @@ export function organizationJsonLd() {
     name: SITE_NAME,
     url: SITE_URL,
     email: SITE_EMAIL,
-    telephone: SITE_PHONE_DISPLAY,
     areaServed: {
       "@type": "Country",
       name: "Nicaragua",
     },
-    sameAs: [SITE_WHATSAPP_URL, "https://www.youtube.com/@nicaraguahomesforrent"],
+    sameAs: ["https://www.youtube.com/@nicaraguahomesforrent"],
   };
 }
 

@@ -30,7 +30,7 @@ const sections = [
   {
     title: "3. Inquiries and communications",
     paragraphs: [
-      "If you contact us through forms, email, WhatsApp, or other channels, you agree to provide accurate information and to communicate lawfully and respectfully.",
+      "If you contact us through forms or email, you agree to provide accurate information and to communicate lawfully and respectfully.",
     ],
   },
   {

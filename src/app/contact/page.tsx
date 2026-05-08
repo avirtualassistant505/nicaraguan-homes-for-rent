@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PublicPageLayout } from "@/components/site/PublicPageLayout";
 import { JsonLd, organizationJsonLd, pageMetadata } from "@/lib/seo";
-import { SITE_EMAIL, SITE_PHONE, SITE_PHONE_DISPLAY, SITE_WHATSAPP_URL } from "@/lib/site";
+import { SITE_EMAIL } from "@/lib/site";
 
 export const metadata = pageMetadata({
   title: "Contact Nicaragua Homes For Rent",
@@ -40,38 +40,13 @@ export default function ContactPage() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-[1.5rem] border border-[#d8e5ee] bg-white p-5 shadow-[0_14px_34px_rgba(8,56,90,0.06)]">
-              <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-[#0f699b]">
-                Phone
-              </p>
-              <a
-                href={`tel:${SITE_PHONE}`}
-                className="mt-3 inline-block text-[1.15rem] font-bold text-[#0c3553] underline decoration-[#9fdcff] underline-offset-4"
-              >
-                {SITE_PHONE_DISPLAY}
-              </a>
-              <p className="mt-3 text-[0.96rem] leading-7 text-[#4a6a82]">
-                Call or text if you already know which property you want to ask about.
-              </p>
-            </div>
-
-            <div className="rounded-[1.5rem] border border-[#d8e5ee] bg-white p-5 shadow-[0_14px_34px_rgba(8,56,90,0.06)]">
-              <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-[#0f699b]">
-                WhatsApp
-              </p>
-              <a
-                href={SITE_WHATSAPP_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-3 inline-block text-[1.15rem] font-bold text-[#0c3553] underline decoration-[#9fdcff] underline-offset-4"
-              >
-                Message on WhatsApp
-              </a>
-              <p className="mt-3 text-[0.96rem] leading-7 text-[#4a6a82]">
-                Best for fast rental questions, media requests, and shortlisting homes.
-              </p>
-            </div>
+          <div className="rounded-[1.5rem] border border-[#d8e5ee] bg-white p-5 shadow-[0_14px_34px_rgba(8,56,90,0.06)]">
+            <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-[#0f699b]">
+              Public contact policy
+            </p>
+            <p className="mt-3 text-[0.96rem] leading-7 text-[#4a6a82]">
+              Email is the only public contact channel for rental questions, availability requests, media inquiries, and listing partnerships.
+            </p>
           </div>
 
           <div className="rounded-[1.75rem] border border-[#d8e5ee] bg-[#f8fcff] p-6 shadow-[0_18px_38px_rgba(8,56,90,0.08)]">

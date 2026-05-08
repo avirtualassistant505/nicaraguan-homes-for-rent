@@ -5,7 +5,6 @@ import { Footer } from "@/components/home/Footer";
 import { SiteHeader } from "@/components/home/SiteHeader";
 import { getListingVideosForListing, getPublishedListingBySlug } from "@/lib/listings";
 import { JsonLd, listingJsonLd, listingMetadata, pageMetadata, rentalSeoPages } from "@/lib/seo";
-import { isUsablePhone, isUsableWhatsAppUrl } from "@/lib/site";
 
 type ListingPageProps = {
   params: Promise<{
@@ -66,8 +65,6 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const location = [listing.city, listing.neighborhood, listing.region].filter(Boolean).join(", ");
   const gallery = listing.gallery_images.length > 0 ? listing.gallery_images : [listing.image_path];
   const contactHref = listing.contact_email ? `mailto:${listing.contact_email}` : "/contact";
-  const hasPhone = isUsablePhone(listing.contact_phone);
-  const whatsappHref = isUsableWhatsAppUrl(listing.whatsapp_url) ? listing.whatsapp_url : null;
   const videos = await getListingVideosForListing(listing.id);
   const embeddableVideos = videos
     .map((video) => ({
@@ -308,9 +305,6 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   {listing.contact_name ? (
                     <p className="text-sm font-bold text-[#173d58]">{listing.contact_name}</p>
                   ) : null}
-                  {hasPhone ? (
-                    <p className="text-sm text-[#587286]">{listing.contact_phone}</p>
-                  ) : null}
                   {listing.contact_email ? (
                     <p className="text-sm text-[#587286]">{listing.contact_email}</p>
                   ) : null}
@@ -322,14 +316,6 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     >
                       Email inquiry
                     </a>
-                    {whatsappHref ? (
-                      <a
-                        href={whatsappHref}
-                        className="inline-flex rounded-full border border-[#c7d7e3] bg-white px-5 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-[#18435f]"
-                      >
-                        WhatsApp
-                      </a>
-                    ) : null}
                   </div>
                 </div>
               </aside>

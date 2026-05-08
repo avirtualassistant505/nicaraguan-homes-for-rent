@@ -12,7 +12,7 @@ const sections = [
   {
     title: "1. Information we collect",
     paragraphs: [
-      "We may collect contact information that you submit through forms or inquiries, including name, email address, phone number, WhatsApp number, and property inquiry details.",
+      "We may collect contact information that you submit through forms or inquiries, including name, email address, and property inquiry details.",
       "We may also collect technical information such as IP address, browser type, device information, and usage data, plus account and authentication data for authorized administrators.",
       "If an authorized administrator chooses to connect TikTok, we may process limited TikTok account data and authorization credentials returned by TikTok, including account identifiers, scopes granted, access tokens, refresh tokens, token expiration metadata, video files, captions, and related publishing metadata.",
     ],

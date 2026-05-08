@@ -1,36 +1,7 @@
 export const SITE_NAME = "Nicaraguan Homes For Rent";
 export const SITE_EMAIL = "nicahomesforrent@gmail.com";
-export const SITE_PHONE = "2049052234";
-export const SITE_PHONE_DISPLAY = "(204) 905-2234";
-export const SITE_WHATSAPP_URL = "https://wa.me/12049052234";
 export const SITE_TAGLINE =
   "Curated long-stay homes across Nicaragua for relocation, remote work, and tropical living.";
-
-function getDigits(value: string | null | undefined) {
-  return (value || "").replace(/\D/g, "");
-}
-
-export function isUsablePhone(value: string | null | undefined) {
-  const digits = getDigits(value);
-
-  if (!digits) {
-    return false;
-  }
-
-  if (digits.length < 7) {
-    return false;
-  }
-
-  return !/^0+$/.test(digits) && !digits.includes("0000");
-}
-
-export function isUsableWhatsAppUrl(value: string | null | undefined) {
-  if (!value) {
-    return false;
-  }
-
-  return isUsablePhone(value);
-}
 
 export function formatFileSize(bytes: number | null | undefined) {
   if (!bytes || bytes <= 0) {
