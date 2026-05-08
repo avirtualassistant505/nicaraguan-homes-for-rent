@@ -4,9 +4,11 @@ import { BrandLogo } from "@/components/home/BrandLogo";
 const navItems = [
   { href: "/", label: "Home" },
   { href: "/listings", label: "Listings" },
+  { href: "/rentals/managua", label: "Managua" },
+  { href: "/rentals/granada", label: "Granada" },
+  { href: "/rentals/beach-homes", label: "Beach Homes" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
-  { href: "/creator-tools", label: "Creator Tools" },
 ];
 
 type SiteHeaderProps = {

@@ -113,6 +113,48 @@ function slugify(value) {
     .slice(0, 90);
 }
 
+function citySlug(value) {
+  const slug = slugify(value || "nicaragua");
+  return slug || "nicaragua";
+}
+
+function rentBucket(monthlyPrice) {
+  if (!monthlyPrice) {
+    return "contact-for-pricing";
+  }
+
+  if (monthlyPrice < 500) {
+    return "under-500";
+  }
+
+  if (monthlyPrice <= 1000) {
+    return "500-to-1000";
+  }
+
+  if (monthlyPrice <= 1800) {
+    return "1000-to-1800";
+  }
+
+  return "over-1800";
+}
+
+function truncateSentence(value, limit) {
+  const cleaned = String(value || "").replace(/\s+/g, " ").trim();
+
+  if (cleaned.length <= limit) {
+    return cleaned;
+  }
+
+  return `${cleaned.slice(0, limit - 3).trimEnd()}...`;
+}
+
+function buildPhotoAltText({ uploadedPhotos, city, monthlyPrice, propertyType, title }) {
+  const price = monthlyPrice ? `$${monthlyPrice} per month` : "Nicaragua";
+  return uploadedPhotos.map((_, index) =>
+    `${title} ${propertyType} rental photo ${index + 1} in ${city}, Nicaragua, ${price}`.replace(/\s+/g, " ").trim(),
+  );
+}
+
 function parseListingText(text) {
   const getLine = (label) => {
     const match = text.match(new RegExp(`^${label}:\\s*(.+)$`, "mi"));
@@ -225,11 +267,29 @@ function buildListingPayload({ listingOutput, uploadedPhotos, listingFacts, meta
   const conceptTitle = directorPlan?.concept?.selected_title || "";
   const title = listingFacts.title === "Casa en Renta" ? `${listingFacts.title} in ${city}` : listingFacts.title;
   const slug = slugify(`${title}-${city}-${listingId}`);
+  const propertyType = metadata?.propertyType || listingFacts.propertyType || "House";
   const sourceDescription = metadata?.description || listingFacts.description;
   const summaryParts = [
-    monthlyPrice ? `$${monthlyPrice}/mo ${metadata?.propertyType || listingFacts.propertyType || "house"} rental in ${city}.` : `${city} rental home.`,
+    monthlyPrice ? `$${monthlyPrice}/mo ${propertyType} rental in ${city}.` : `${city} rental home.`,
     sourceDescription,
   ].filter(Boolean);
+  const summary = summaryParts.join(" ").slice(0, 280);
+  const seoTitle = monthlyPrice
+    ? `$${monthlyPrice}/mo ${propertyType} for Rent in ${city}, Nicaragua`
+    : `${propertyType} for Rent in ${city}, Nicaragua`;
+  const seoDescription = truncateSentence(
+    `See this ${monthlyPrice ? `$${monthlyPrice} per month` : "Nicaragua"} ${propertyType.toLowerCase()} rental in ${city}, Nicaragua with regenerated property photos, video tour, listing details, and contact options.`,
+    158,
+  );
+  const longDescription = truncateSentence(
+    [
+      summary,
+      "Review the regenerated reference-photo gallery, video tour, rent, city, and listing details, then verify current availability, condition, lease terms, and included furnishings before renting.",
+    ]
+      .filter(Boolean)
+      .join(" "),
+    500,
+  );
 
   return {
     slug,
@@ -237,7 +297,7 @@ function buildListingPayload({ listingOutput, uploadedPhotos, listingFacts, meta
     city,
     region,
     neighborhood: metadata?.location?.neighborhood || null,
-    property_type: metadata?.propertyType || listingFacts.propertyType || "House",
+    property_type: propertyType,
     furnishing: "Contact for details",
     availability_status: "available",
     label: monthlyPrice ? `$${monthlyPrice}/mo` : "New rental",
@@ -247,7 +307,7 @@ function buildListingPayload({ listingOutput, uploadedPhotos, listingFacts, meta
     square_meters: null,
     parking_spaces: null,
     pet_friendly: false,
-    summary: summaryParts.join(" ").slice(0, 280),
+    summary,
     description: [
       conceptTitle ? `Video concept: ${conceptTitle}` : "",
       sourceDescription,
@@ -266,6 +326,19 @@ function buildListingPayload({ listingOutput, uploadedPhotos, listingFacts, meta
     is_featured: true,
     is_published: true,
     sort_order: 0,
+    seo_title: seoTitle,
+    seo_description: seoDescription,
+    canonical_slug: slug,
+    city_landing_page: citySlug(city),
+    rent_bucket: rentBucket(monthlyPrice),
+    property_summary_120: truncateSentence(summary, 120),
+    property_description_500: longDescription,
+    verification_notes:
+      "Verify current rent, availability, location, lease terms, included furnishings, utilities, and property condition before committing.",
+    photo_alt_text: buildPhotoAltText({ uploadedPhotos, city, monthlyPrice, propertyType, title }),
+    video_title: conceptTitle || seoTitle,
+    video_description: seoDescription,
+    source_last_seen_at: new Date().toISOString(),
   };
 }
 

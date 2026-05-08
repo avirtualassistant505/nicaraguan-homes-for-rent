@@ -1,6 +1,14 @@
 import { redirect } from "next/navigation";
 import { hasAdminSession, isAdminConfigured } from "@/lib/admin-auth";
 import { loginAction } from "@/app/admin/actions";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata = pageMetadata({
+  title: "Admin Login",
+  description: "Protected admin login for Nicaragua Homes For Rent.",
+  path: "/admin/login",
+  noIndex: true,
+});
 
 type LoginPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "@/components/home/Footer";
 import { SiteHeader } from "@/components/home/SiteHeader";
 import { getListingVideosForListing, getPublishedListingBySlug } from "@/lib/listings";
+import { JsonLd, listingJsonLd, listingMetadata, pageMetadata, rentalSeoPages } from "@/lib/seo";
 import { isUsablePhone, isUsableWhatsAppUrl } from "@/lib/site";
 
 type ListingPageProps = {
@@ -11,6 +12,22 @@ type ListingPageProps = {
     slug: string;
   }>;
 };
+
+export async function generateMetadata({ params }: ListingPageProps) {
+  const { slug } = await params;
+  const listing = await getPublishedListingBySlug(slug);
+
+  if (!listing) {
+    return pageMetadata({
+      title: "Nicaragua rental listing not found",
+      description: "This Nicaragua rental listing could not be found or is no longer published.",
+      path: `/listings/${slug}`,
+      noIndex: true,
+    });
+  }
+
+  return listingMetadata(listing);
+}
 
 function formatNumber(value: number | null, suffix: string) {
   if (value == null) {
@@ -58,6 +75,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
       embedUrl: getYouTubeEmbedUrl(video.video_url),
     }))
     .filter((video) => video.embedUrl);
+  const matchingSeoPages = rentalSeoPages.filter((page) => page.match(listing)).slice(0, 6);
+  const videoUrls = embeddableVideos.map((video) => video.video_url);
 
   return (
     <>
@@ -111,6 +130,13 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   <p className="mt-4 text-[1.02rem] leading-8 text-[#4a6a82]">
                     {listing.description || listing.summary}
                   </p>
+                  <p className="mt-4 text-sm leading-7 text-[#587286]">
+                    Last updated {new Date(listing.updated_at).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}. Verify current rent, availability, furnishings, and property condition before making plans or sending funds.
+                  </p>
                 </div>
 
                 <div>
@@ -146,11 +172,11 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       Gallery
                     </p>
                     <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                      {gallery.slice(0, 6).map((image) => (
+                      {gallery.slice(0, 6).map((image, index) => (
                         <div key={image} className="relative aspect-[1.2/0.95] overflow-hidden rounded-[1.25rem]">
                           <Image
                             src={image}
-                            alt={listing.title}
+                            alt={`${listing.title} rental photo ${index + 1} in ${listing.city}, Nicaragua`}
                             fill
                             sizes="(max-width: 768px) 100vw, 50vw"
                             className="object-cover"
@@ -193,6 +219,43 @@ export default async function ListingPage({ params }: ListingPageProps) {
                             </a>
                           </div>
                         </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                <div>
+                  <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-[#0f699b]">
+                    Renter verification checklist
+                  </p>
+                  <ul className="mt-4 grid gap-3 text-[0.98rem] leading-7 text-[#4a6a82] sm:grid-cols-2">
+                    {[
+                      "Confirm current monthly rent, currency, deposit, and lease length.",
+                      "Verify exact location, access, parking, and neighborhood fit.",
+                      "Ask which furnishings, appliances, utilities, and services are included.",
+                      "Confirm current condition, maintenance issues, water, internet, and security.",
+                    ].map((item) => (
+                      <li key={item} className="rounded-[1rem] bg-[#f8fcff] px-4 py-3">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {matchingSeoPages.length > 0 ? (
+                  <div>
+                    <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-[#0f699b]">
+                      Related rental searches
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-3">
+                      {matchingSeoPages.map((page) => (
+                        <Link
+                          key={page.slug}
+                          href={`/rentals/${page.slug}`}
+                          className="rounded-full border border-[#bed4e2] bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[#0f699b] transition hover:bg-[#f6fbff]"
+                        >
+                          {page.h1}
+                        </Link>
                       ))}
                     </div>
                   </div>
@@ -276,6 +339,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
           <Footer />
         </div>
       </main>
+      <JsonLd data={listingJsonLd(listing, videoUrls)} />
     </>
   );
 }

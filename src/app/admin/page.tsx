@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { pageMetadata } from "@/lib/seo";
 import { AdminListingForm } from "@/components/admin/AdminListingForm";
 import { TikTokPanel } from "@/components/admin/TikTokPanel";
 import {
@@ -18,6 +19,13 @@ import {
   getTikTokConnectionSummary,
   isTikTokConfigured,
 } from "@/lib/tiktok";
+
+export const metadata = pageMetadata({
+  title: "Listings Admin",
+  description: "Protected admin dashboard for Nicaragua Homes For Rent.",
+  path: "/admin",
+  noIndex: true,
+});
 
 type AdminDashboardPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;

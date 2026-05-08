@@ -1,5 +1,12 @@
 import { PublicPageLayout } from "@/components/site/PublicPageLayout";
+import { pageMetadata } from "@/lib/seo";
 import { SITE_EMAIL, SITE_NAME } from "@/lib/site";
+
+export const metadata = pageMetadata({
+  title: "Privacy Policy",
+  description: "Privacy policy for Nicaragua Homes For Rent rental inquiries, listing media, admin tools, and connected publishing workflows.",
+  path: "/privacy-policy",
+});
 
 const sections = [
   {

@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 function loadDotEnv(filePath) {
@@ -35,24 +35,31 @@ function loadDotEnv(filePath) {
 }
 
 const args = process.argv.slice(2);
-const envFromFile = loadDotEnv(resolve(".env.local"));
+const envFile = resolve(".env.local");
+const envFromFile = existsSync(envFile) ? loadDotEnv(envFile) : {};
+const databaseUrl = envFromFile.DATABASE_URL || process.env.DATABASE_URL;
 
-if (!envFromFile.DATABASE_URL) {
-  console.error("DATABASE_URL is missing from .env.local");
+if (!databaseUrl) {
+  console.error("DATABASE_URL is missing from .env.local and the process environment");
   process.exit(1);
 }
 
-const child = spawn(
-  "/opt/homebrew/opt/libpq/bin/psql",
-  [envFromFile.DATABASE_URL, ...args],
-  {
-    stdio: "inherit",
-    env: {
-      ...process.env,
-      ...envFromFile,
-    },
+const psqlCommand =
+  process.env.PSQL_BIN ||
+  (process.platform === "win32"
+    ? "psql.exe"
+    : existsSync("/opt/homebrew/opt/libpq/bin/psql")
+      ? "/opt/homebrew/opt/libpq/bin/psql"
+      : "psql");
+
+const child = spawn(psqlCommand, [databaseUrl, ...args], {
+  stdio: "inherit",
+  shell: process.platform === "win32",
+  env: {
+    ...process.env,
+    ...envFromFile,
   },
-);
+});
 
 child.on("exit", (code) => {
   process.exit(code ?? 1);

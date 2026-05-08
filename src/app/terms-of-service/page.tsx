@@ -1,5 +1,12 @@
 import { PublicPageLayout } from "@/components/site/PublicPageLayout";
+import { pageMetadata } from "@/lib/seo";
 import { SITE_EMAIL, SITE_NAME } from "@/lib/site";
+
+export const metadata = pageMetadata({
+  title: "Terms Of Service",
+  description: "Terms of service for Nicaragua Homes For Rent listing information, inquiries, media, admin tools, and connected publishing workflows.",
+  path: "/terms-of-service",
+});
 
 const sections = [
   {

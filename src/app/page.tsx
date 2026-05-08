@@ -6,10 +6,24 @@ import { ListingCard } from "@/components/home/ListingCard";
 import { SearchBar } from "@/components/home/SearchBar";
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { SiteHeader } from "@/components/home/SiteHeader";
-import { TestimonialCard } from "@/components/home/TestimonialCard";
 import { WhatsAppButton } from "@/components/home/WhatsAppButton";
 import { getFeaturedListings } from "@/lib/listings";
+import {
+  JsonLd,
+  featuredItemsForJsonLd,
+  itemListJsonLd,
+  organizationJsonLd,
+  pageMetadata,
+  websiteJsonLd,
+} from "@/lib/seo";
 import { SITE_EMAIL } from "@/lib/site";
+
+export const metadata = pageMetadata({
+  title: "Nicaragua Homes For Rent | Long-Term Houses, Villas & Furnished Rentals",
+  description:
+    "Browse Nicaragua homes for rent by city, rent, property type, and lifestyle. Find furnished houses, villas, and long-term rentals in Managua, Granada, San Juan del Sur, and more.",
+  path: "/",
+});
 
 const reasons = [
   {
@@ -81,27 +95,6 @@ const lifestyles = [
   "Retirement",
 ];
 
-const testimonials = [
-  {
-    name: "Sarah & John",
-    title: "Relocating from Canada",
-    quote:
-      "We found our dream rental in just days. The process felt simple, transparent, and far more curated than typical property sites.",
-  },
-  {
-    name: "Carlos M.",
-    title: "Long-stay renter",
-    quote:
-      "The listings were beautiful, the neighborhoods made sense for our lifestyle, and the support felt personal from the start.",
-  },
-  {
-    name: "Alina R.",
-    title: "Remote worker",
-    quote:
-      "I wanted somewhere tropical but practical. This made it easy to compare coastal homes, city rentals, and quieter retreats.",
-  },
-];
-
 export default async function Home() {
   const { listings: featuredRentals } = await getFeaturedListings();
   const heroListing = featuredRentals[0];
@@ -132,10 +125,10 @@ export default async function Home() {
                   </span>
                   <div className="space-y-5">
                     <h1 className="display-font max-w-3xl text-[3rem] leading-[0.95] sm:text-[4.2rem] lg:text-[5.25rem]">
-                      Find Your Dream Rental Home in Nicaragua
+                      Nicaragua Homes For Rent
                     </h1>
                     <p className="max-w-2xl text-[1.02rem] leading-8 text-[#e7f5ff] sm:text-[1.08rem]">
-                      Discover curated homes for relocation, remote work, family stays, and tropical long-term living across Nicaragua&apos;s most loved destinations.
+                      Find long-term houses, furnished homes, villas, and practical monthly rentals across Managua, Granada, San Juan del Sur, Leon, Rivas, Tola, Masaya, Esteli, and Matagalpa.
                     </p>
                   </div>
 
@@ -316,14 +309,33 @@ export default async function Home() {
         <section className="px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="mx-auto max-w-7xl space-y-10">
             <SectionHeading
-              eyebrow="Client Testimonials"
-              title="Trusted by renters planning their next chapter"
-              description="People use the site to compare neighborhoods, shortlist homes, and move from browsing to a confident inquiry."
+              eyebrow="Renter Verification"
+              title="Use the site to shortlist homes, then verify the details that matter"
+              description="Every rental search should confirm current price, location, availability, furnishings, lease terms, and condition before anyone commits."
             />
 
             <div className="grid gap-5 lg:grid-cols-3">
-              {testimonials.map((testimonial) => (
-                <TestimonialCard key={testimonial.name} {...testimonial} />
+              {[
+                {
+                  title: "Compare current listings",
+                  body: "Start with city, monthly rent, property type, gallery photos, video tours, and visible condition cues.",
+                },
+                {
+                  title: "Ask direct questions",
+                  body: "Confirm rent currency, deposit, utilities, lease length, included furnishings, internet, water, parking, and security.",
+                },
+                {
+                  title: "Verify before committing",
+                  body: "Treat photos and videos as a shortlist tool. Check current availability and condition directly before sending funds.",
+                },
+              ].map((item) => (
+                <article
+                  key={item.title}
+                  className="rounded-[1.5rem] border border-[#dbe8ef] bg-white p-6 shadow-[0_18px_38px_rgba(8,56,90,0.06)]"
+                >
+                  <h3 className="display-font text-[1.45rem] leading-none text-[#0a3555]">{item.title}</h3>
+                  <p className="mt-4 text-[0.98rem] leading-7 text-[#4a6a82]">{item.body}</p>
+                </article>
               ))}
             </div>
           </div>
@@ -366,6 +378,7 @@ export default async function Home() {
       </main>
 
       <WhatsAppButton />
+      <JsonLd data={[organizationJsonLd(), websiteJsonLd(), itemListJsonLd(featuredItemsForJsonLd(featuredRentals))]} />
     </>
   );
 }

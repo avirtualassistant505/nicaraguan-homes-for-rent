@@ -145,6 +145,10 @@ export const fallbackFeaturedRentals: FeaturedListing[] = [
   },
 ];
 
+function isMissingSupabaseEnv(error: unknown) {
+  return error instanceof Error && error.message.startsWith("Missing required environment variable:");
+}
+
 function mapFeaturedListingRow(listing: FeaturedListingRow): FeaturedListing {
   return {
     slug: listing.slug,
@@ -251,7 +255,9 @@ export async function getFeaturedListings() {
       source: "database" as const,
     };
   } catch (error) {
-    console.error("Failed to load featured listings from Supabase.", error);
+    if (!isMissingSupabaseEnv(error)) {
+      console.error("Failed to load featured listings from Supabase.", error);
+    }
 
     return {
       listings: fallbackFeaturedRentals,
@@ -271,7 +277,9 @@ export async function getAdminListings() {
       error: null,
     };
   } catch (error) {
-    console.error("Failed to load admin listings from Supabase.", error);
+    if (!isMissingSupabaseEnv(error)) {
+      console.error("Failed to load admin listings from Supabase.", error);
+    }
 
     return {
       listings: [] as AdminListing[],
@@ -299,7 +307,9 @@ export async function getPublishedListings(filters: ListingFilters = {}) {
       error: null,
     };
   } catch (error) {
-    console.error("Failed to load published listings from Supabase.", error);
+    if (!isMissingSupabaseEnv(error)) {
+      console.error("Failed to load published listings from Supabase.", error);
+    }
 
     return {
       listings: [] as AdminListing[],
@@ -324,8 +334,30 @@ export async function getPublishedListingBySlug(slug: string) {
 
     return listings[0] ? normalizeListing(listings[0]) : null;
   } catch (error) {
-    console.error(`Failed to load published listing "${slug}" from Supabase.`, error);
+    if (!isMissingSupabaseEnv(error)) {
+      console.error(`Failed to load published listing "${slug}" from Supabase.`, error);
+    }
     return null;
+  }
+}
+
+export async function getAllPublishedListings() {
+  const { listings } = await getPublishedListings();
+  return listings;
+}
+
+export async function getPublishedListingSlugs() {
+  try {
+    const listings = await querySupabase<Array<Pick<AdminListing, "slug" | "updated_at">>>(
+      "listings?select=slug,updated_at&is_published=eq.true&order=updated_at.desc",
+    );
+
+    return listings;
+  } catch (error) {
+    if (!isMissingSupabaseEnv(error)) {
+      console.error("Failed to load published listing slugs from Supabase.", error);
+    }
+    return [] as Array<Pick<AdminListing, "slug" | "updated_at">>;
   }
 }
 
@@ -335,7 +367,9 @@ export async function getListingVideosForListing(listingId: string) {
       `listing_videos?select=id,listing_id,file_name,video_url,storage_path,mime_type,size_bytes,duration_seconds,status,created_at,updated_at&listing_id=eq.${encodeURIComponent(listingId)}&order=created_at.asc`,
     );
   } catch (error) {
-    console.error(`Failed to load listing videos for "${listingId}".`, error);
+    if (!isMissingSupabaseEnv(error)) {
+      console.error(`Failed to load listing videos for "${listingId}".`, error);
+    }
     return [] as ListingVideo[];
   }
 }

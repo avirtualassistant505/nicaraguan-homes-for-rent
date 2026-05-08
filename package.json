@@ -11,6 +11,7 @@
     "db:migrate:initial": "node scripts/run-psql.mjs -v ON_ERROR_STOP=1 -f supabase/migrations/20260314143000_initial_listings.sql",
     "db:migrate:expand": "node scripts/run-psql.mjs -v ON_ERROR_STOP=1 -f supabase/migrations/20260314173500_expand_listing_fields.sql",
     "db:migrate:contacts": "node scripts/run-psql.mjs -v ON_ERROR_STOP=1 -f supabase/migrations/20260314235500_update_listing_contact_defaults.sql",
+    "db:migrate:seo": "node scripts/run-psql.mjs -v ON_ERROR_STOP=1 -f supabase/migrations/20260508010500_add_listing_seo_fields.sql",
     "automation:publish-listing": "node scripts/publish-automation-listing.mjs"
   },
   "dependencies": {

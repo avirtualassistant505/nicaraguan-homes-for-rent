@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { PublicPageLayout } from "@/components/site/PublicPageLayout";
+import { JsonLd, organizationJsonLd, pageMetadata } from "@/lib/seo";
 import { SITE_EMAIL, SITE_NAME } from "@/lib/site";
+
+export const metadata = pageMetadata({
+  title: "About Nicaragua Homes For Rent",
+  description:
+    "Learn how Nicaragua Homes For Rent sources, presents, and updates rental listings, regenerated media, video tours, and renter verification guidance.",
+  path: "/about",
+});
 
 const pillars = [
   {
@@ -39,10 +47,10 @@ export default function AboutPage() {
               Designed for long-stay renters, relocation searches, and lifestyle-led moves
             </h2>
             <p className="text-[1rem] leading-8 text-[#4a6a82]">
-              {SITE_NAME} presents curated rental listings from destinations such as San Juan del Sur, Granada, Managua, Ometepe, and the Matagalpa highlands. The experience is designed to feel polished, trustworthy, and useful for people planning a serious move or extended stay.
+              {SITE_NAME} presents curated rental listings from destinations such as Managua, Granada, San Juan del Sur, Leon, Rivas, Tola, Masaya, Esteli, and Matagalpa. The experience is designed to feel polished, trustworthy, and useful for people planning a serious move or extended stay.
             </p>
             <p className="text-[1rem] leading-8 text-[#4a6a82]">
-              Behind the scenes, authorized administrators manage listing content, images, and business media workflows so the public site stays consistent and up to date.
+              Behind the scenes, authorized administrators manage listing content, regenerated reference-photo galleries, video tours, and business media workflows so the public site stays consistent and up to date. Renters should still verify current rent, availability, condition, and lease terms before committing.
             </p>
           </div>
 
@@ -86,14 +94,15 @@ export default function AboutPage() {
               View published listings
             </Link>
             <Link
-              href="/creator-tools"
+              href="/rentals/expats"
               className="inline-flex rounded-full border border-[#c7d7e3] bg-white px-5 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-[#18435f]"
             >
-              Creator tools
+              Rentals for expats
             </Link>
           </div>
         </section>
       </div>
+      <JsonLd data={organizationJsonLd()} />
     </PublicPageLayout>
   );
 }

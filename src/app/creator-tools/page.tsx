@@ -1,4 +1,12 @@
 import { PublicPageLayout } from "@/components/site/PublicPageLayout";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata = pageMetadata({
+  title: "Creator Tools",
+  description: "Protected media workflow information for authorized listing administrators.",
+  path: "/creator-tools",
+  noIndex: true,
+});
 
 const capabilities = [
   {

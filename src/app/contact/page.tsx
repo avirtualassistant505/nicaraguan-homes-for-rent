@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { PublicPageLayout } from "@/components/site/PublicPageLayout";
+import { JsonLd, organizationJsonLd, pageMetadata } from "@/lib/seo";
 import { SITE_EMAIL, SITE_PHONE, SITE_PHONE_DISPLAY, SITE_WHATSAPP_URL } from "@/lib/site";
+
+export const metadata = pageMetadata({
+  title: "Contact Nicaragua Homes For Rent",
+  description:
+    "Contact Nicaragua Homes For Rent about rental listings in Managua, Granada, San Juan del Sur, Leon, Rivas, Tola, Masaya, Esteli, Matagalpa, and nearby areas.",
+  path: "/contact",
+});
 
 const inquiryTips = [
   "Your preferred cities or neighborhoods",
@@ -90,6 +98,9 @@ export default function ContactPage() {
           <p className="mt-4 text-[1rem] leading-8 text-[#4a6a82]">
             Browse homes by location, budget, and property type, then reach out once you have a shortlist.
           </p>
+          <p className="mt-4 text-[0.96rem] leading-7 text-[#4a6a82]">
+            Service area includes Managua, Granada, San Juan del Sur, Leon, Rivas, Tola, Masaya, Esteli, Matagalpa, and other Nicaragua rental markets as listings become available.
+          </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href="/listings"
@@ -106,6 +117,7 @@ export default function ContactPage() {
           </div>
         </section>
       </div>
+      <JsonLd data={organizationJsonLd()} />
     </PublicPageLayout>
   );
 }

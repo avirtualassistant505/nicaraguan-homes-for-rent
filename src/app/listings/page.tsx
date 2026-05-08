@@ -5,6 +5,14 @@ import { SearchBar } from "@/components/home/SearchBar";
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { SiteHeader } from "@/components/home/SiteHeader";
 import { getPublishedListings } from "@/lib/listings";
+import { JsonLd, absoluteUrl, itemListJsonLd, pageMetadata, rentalSeoPages } from "@/lib/seo";
+
+export const metadata = pageMetadata({
+  title: "Nicaragua Rental Listings | Houses, Villas & Furnished Homes",
+  description:
+    "Search current Nicaragua rental listings by city, monthly rent, property type, furnishing, and pet-friendly options.",
+  path: "/listings",
+});
 
 type ListingsPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -26,6 +34,13 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
 
   const { listings, totalPublished, filterOptions, error } = await getPublishedListings(filters);
   const activeFilterCount = Object.values(filters).filter(Boolean).length;
+  const listingItems = listings.map((listing) => ({
+    name: listing.title,
+    url: absoluteUrl(`/listings/${listing.slug}`),
+    image: listing.image_path,
+    price: listing.price_label,
+  }));
+  const prioritySeoLinks = rentalSeoPages.slice(0, 10);
 
   return (
     <>
@@ -73,6 +88,18 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
                   showKeyword
                   submitLabel="Filter listings"
                 />
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-3">
+                {prioritySeoLinks.map((page) => (
+                  <Link
+                    key={page.slug}
+                    href={`/rentals/${page.slug}`}
+                    className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] text-white backdrop-blur transition hover:bg-white/16"
+                  >
+                    {page.h1.replace(" in Nicaragua", "").replace(" in ", " ")}
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
@@ -150,6 +177,19 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
 
         <Footer />
       </main>
+      <JsonLd
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: "Nicaragua Rental Listings",
+            description:
+              "Current Nicaragua rental listings with city, rent, property type, photos, video tours, and contact details.",
+            url: absoluteUrl("/listings"),
+          },
+          itemListJsonLd(listingItems),
+        ]}
+      />
     </>
   );
 }
