@@ -27,6 +27,20 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_TITLE}`,
   },
   description: DEFAULT_DESCRIPTION,
+  icons: {
+    icon: [
+      {
+        url: "/favicon.svg",
+        type: "image/svg+xml",
+      },
+      {
+        url: "/favicon.ico",
+        sizes: "any",
+      },
+    ],
+    shortcut: "/favicon.svg",
+    apple: "/nhr-logo.svg",
+  },
   alternates: {
     canonical: SITE_URL,
   },
